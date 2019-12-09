@@ -10,6 +10,32 @@ import time
 import argparse
 import imutils
 
+def sendLineInfo(newX,oldX,width):
+    try:
+        if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
+            ser.write(chr(int(newX*(126/width))+1).encode()) 
+            print("writing serial value: " + str(int(newX*(126/width))+1))
+
+    except:
+        print("No new line info. No serial written.")
+
+# Function to display camera window on GUI. Default input is True, run False to disable.
+def showImage(show = True):
+    if show:
+        try:
+            cv2.imshow("Res1", img) # Displays image windows
+            cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
+        except:
+            print("can't show camera")
+
+
+# Stops thread loading images and destroys camera windows.
+def cleanUp():
+    cv2.destroyAllWindows()
+    vs.stop()
+
+
+
 # Set-up
 
 # Defines serial at baudrate 9600
@@ -118,28 +144,5 @@ cleanUp()
 
 # Definitions of functions
 
-# Function to send line info if line position has changed.
-def sendLineInfo(newX,oldX,width):
-    try:
-        if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
-            ser.write(chr(int(newX*(126/width))+1).encode()) 
-            print("writing serial value: " + str(int(newX*(126/width))+1))
-
-    except:
-        print("No new line info. No serial written.")
-
-# Function to display camera window on GUI. Default input is True, run False to disable.
-def showImage(show = True):
-    if show:
-        try:
-            cv2.imshow("Res1", img) # Displays image windows
-            cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
-        except:
-            print("can't show camera")
-
-
-# Stops thread loading images and destroys camera windows.
-def cleanUp():
-    cv2.destroyAllWindows()
-    vs.stop()
+# Function to send line info if line position has changed
 
