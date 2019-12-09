@@ -120,7 +120,7 @@ while True:
 
     
     except:
-        print("Found no line!")
+        print("Found no line...")
         if (highLineY > 10):
             highLineY = highLineY - 5
             
