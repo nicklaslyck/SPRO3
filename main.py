@@ -124,7 +124,7 @@ while True:
         if (highLineY > 10):
             highLineY = highLineY - 5
             
-    sendLineInfo(nexX = tempX, oldX = old_tempX, width = w)
+    sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
 
 
         
