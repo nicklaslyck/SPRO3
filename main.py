@@ -159,6 +159,7 @@ while True:
         
         old_tempX = tempX
     elif state == 1:
+        print("spam1")
         green = 0
         red = 0
         compare = 0
@@ -220,13 +221,13 @@ while True:
 
                 time.sleep(.100)
         #analyse colors here..
-
+        print("spam2")
         if compare > 30:
             if compare / green > 3:
                 print("turn right")
             elif compare / red > 3:
                 print("turn left")
-
+        state = 0
 
     showImage() # run showImage(False) to disable imageview.
 
