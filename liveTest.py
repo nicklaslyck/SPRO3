@@ -108,7 +108,7 @@ while True:
 
             cv2.imshow("Image1", image)
             cv2.imshow("Mask", mask)
-            cv2.imshow("test",thresh)
+            cv2.imshow("test1",thresh)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
