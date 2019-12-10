@@ -223,9 +223,9 @@ while True:
         #analyse colors here..
         print("spam2")
         if compare > 30:
-            if compare / green > 3:
+            if compare / (green+1) > 3:
                 print("turn right")
-            elif compare / red > 3:
+            elif compare / (red+1) > 3:
                 print("turn left")
         state = 0
 
