@@ -107,7 +107,7 @@ packageSymbol = "triangle"
 highLineY = 0
 tempX = 320
 old_tempX = 320
-state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
+state = 1 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
 # While loop for main logic
 while True:        
     # Image parameters / set-up for selecting colors and finding lines
