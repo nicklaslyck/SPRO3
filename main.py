@@ -63,7 +63,10 @@ lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
 
 # current robot line coordinates is defined with null values.
-hx1 = 0, hx2 = 0, hy1 = 0, hy2 = 0
+hx1 = 0 
+hx2 = 0
+hy1 = 0
+hy2 = 0
 
 # highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
 # This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
