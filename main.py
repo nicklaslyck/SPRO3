@@ -1,5 +1,5 @@
-from pyimagesearch.shapedetector import ShapeDetector
 from __future__ import print_function
+from pyimagesearch.shapedetector import ShapeDetector
 from imutils.video import WebcamVideoStream
 from imutils.video import FPS
 import cv2
