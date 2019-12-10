@@ -92,7 +92,7 @@ upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
 lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
 upper_color_red = np.array([hb_r, hg_r, hr_r], dtype=np.uint8)
 
-
+print("blyat")
 max_slider = 40
 
 # current robot line coordinates is defined with null values.
