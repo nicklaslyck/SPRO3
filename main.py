@@ -234,9 +234,9 @@ while True:
             if (highLineY > 10):
                 highLineY = highLineY - 5
 
-        if (slope > -0.7 && slope < 0):
+        if (slope > -0.7 and slope < 0):
             sendLineInfo(newX = 120, oldX = old_tempX, width = w)
-        elif (slope < 0.7 && slope > 0):
+        elif (slope < 0.7 and slope > 0):
             sendLineInfo(newX = 7, oldX = old_tempX, width = w)
         else:
             sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
