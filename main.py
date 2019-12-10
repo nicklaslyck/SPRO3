@@ -222,7 +222,6 @@ while True:
             else:
                 slope = (hy2-hy1)/(hx2-hx1)
 
-            print((hy2-hy1)/(hx2-hx1))
             
             cv2.line(img, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
             # chr(254).encode()
@@ -235,10 +234,13 @@ while True:
                 highLineY = highLineY - 5
             slope = 9000
 
-        if (slope > -0.7 and slope < 0):
-            sendLineInfo(newX = 100, oldX = old_tempX, width = w)
-        elif (slope < 0.7 and slope > 0):
-            sendLineInfo(newX = 27, oldX = old_tempX, width = w)
+        if (tempX > 40 and tempX < 60):
+            if (slope > -0.7 and slope < 0):
+                sendLineInfo(newX = 100, oldX = old_tempX, width = w)
+            elif (slope < 0.7 and slope > 0):
+                sendLineInfo(newX = 27, oldX = old_tempX, width = w)
+            else:
+                sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
         else:
             sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
         
