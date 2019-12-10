@@ -30,7 +30,7 @@ if (False):
     hr = 255 #255
     hg = 75 #50
     hb = 125 #100
-else 
+else: 
     
     lr = 0 #235
     lg = 190 #25
