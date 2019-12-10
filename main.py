@@ -9,6 +9,7 @@ import serial
 import time
 import argparse
 import imutils
+import RPi.GPIO as GPIO
 
 def sendLineInfo(newX,oldX,width):
     try:
@@ -44,7 +45,15 @@ def defineLines():
     edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
     lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=50, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
+def arduinoCallback1(channel):
+    print("interrupt form arduino has been triggered!")
+    while True:
+        print("code bricked...")
+
+GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
 
 # Set-up
 
@@ -128,8 +137,6 @@ while True:
         # chr(254).encode()
         #ser.write(chr(tempX*0.39).encode())
         #print(chr(tempX*0.39).encode())
-        
-
     
     except:
         print("IT WORKS...")
@@ -137,11 +144,8 @@ while True:
             highLineY = highLineY - 5
             
     sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
-
-
-        
+    
     showImage() # run showImage(False) to disable imageview.
-        
         
     old_tempX = tempX
 
@@ -150,11 +154,3 @@ while True:
         break # Stops program if button "q" is pressed.
         
 cleanUp()
-
-
-
-
-# Definitions of functions
-
-# Function to send line info if line position has changed
-
