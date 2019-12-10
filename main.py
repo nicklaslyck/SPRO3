@@ -40,9 +40,6 @@ def cleanUp():
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
-
-GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
-
 # Set-up
 
 # Defines serial at baudrate 9600
@@ -182,6 +179,9 @@ def arduinoCallback1(channel):
         elif (compare / (red+1)) < 5:
             print("turn left")
 
+
+
+GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
 while True:        
     # Image parameters / set-up for selecting colors and finding lines
     img = vs.read()
