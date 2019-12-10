@@ -115,7 +115,7 @@ while True:
     img = imutils.resize(img, width=w)
     
     if state == 0:
-        mask = cv2.inRange(img, lower_color, upper_color) # find colors between the color limits defined earlier. This image is black and white.
+        mask = cv2.inRange(img, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
         edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
         lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=50, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
 
