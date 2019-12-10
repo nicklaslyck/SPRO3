@@ -120,7 +120,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=30
 # Set-up
 
 # Defines serial at baudrate 9600
-ser = serial.Serial('/dev/ttyUSB0', 9600) #ttyACM0 is default
+ser = serial.Serial('/dev/ttyACM0', 9600) #ttyACM0 is default
 
 # camera resolution (depends on camera). This can be changed to a max of 1080p, but with the downside of longer processing time.
 w = 200
