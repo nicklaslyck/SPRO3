@@ -222,6 +222,10 @@ while True:
                 time.sleep(.100)
         #analyse colors here..
         print("spam2")
+        print(compare)
+        print(green)
+        print(red)
+
         if compare > 30:
             if compare / (green+1) > 3:
                 print("turn right")
