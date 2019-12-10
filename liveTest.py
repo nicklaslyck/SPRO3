@@ -55,11 +55,11 @@ while True:
     red = 0
     compare = 0
     for i in range(10):
-        for l in range(1):
+        for l in range(2):
             image = vs.read()
-            if l:
+            if l == 1:
                 mask = cv2.inRange(image, lower_color_green, upper_color_green)
-            else:
+            elif l == 2:
                 mask = cv2.inRange(image, lower_color_red, upper_color_red)
             resized = imutils.resize(mask, width=300)
             ratio = mask.shape[0] / float(resized.shape[0])
@@ -90,7 +90,7 @@ while True:
 
                     if (shape==selected and l==1):
                         green = green + 1
-                    elif (shape==selected and l==0):
+                    elif (shape==selected and l==2):
                         red = red + 1
 
                     compare = compare + 1
