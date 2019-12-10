@@ -43,11 +43,13 @@ upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
 lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
 upper_color_red = np.array([hb_r, hg_r, hr_r], dtype=np.uint8)
 
-selected = "triangle"
+packageSymbol = "triangle"
 w = 640
 
 #image = cv2.imread(args["image"])
 vs = WebcamVideoStream(src=0).start()
+
+errorInserter
 
 while True:
 
@@ -88,9 +90,9 @@ while True:
                     cY = int((M["m01"] / M["m00"]) * ratio)
                     shape = sd.detect(c)
 
-                    if (shape==selected and l==0):
+                    if (shape==packageSymbol and l==0):
                         green = green + 1
-                    elif (shape==selected and l==1):
+                    elif (shape==packageSymbol and l==1):
                         red = red + 1
 
                     compare = compare + 1
@@ -109,11 +111,6 @@ while True:
             cv2.imshow("Image1", image)
             cv2.imshow("Mask", mask)
             cv2.imshow("test1",thresh)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-                break
-                break
 
             time.sleep(.100)
     print("_________")
