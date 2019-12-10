@@ -101,7 +101,7 @@ hx2 = 0
 hy1 = 0
 hy2 = 0
 
-packageSymbol = "triangle"
+packageSymbol = "rectangle"
 # highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
 # This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
 highLineY = 0
@@ -227,9 +227,9 @@ while True:
         print(red)
 
         if compare > 30:
-            if compare / (green+1) > 3:
+            if (compare / (green+1)) > 3:
                 print("turn right")
-            elif compare / (red+1) > 3:
+            elif (compare / (red+1)) > 3:
                 print("turn left")
         state = 0
 
