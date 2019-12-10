@@ -55,7 +55,7 @@ while True:
     red = 0
     compare = 0
     for i in range(10):
-        for l in range(0):
+        for l in range(1):
             image = vs.read()
             if l:
                 mask = cv2.inRange(image, lower_color_green, upper_color_green)
