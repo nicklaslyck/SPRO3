@@ -11,7 +11,6 @@ import os
 import subprocess as sp
 import serial
 import time
-import argparse
 import imutils
 
 # construct the argument parse and parse the arguments
@@ -85,6 +84,7 @@ while True:
             # show the output image
     except:
         print("fix your math")
+        
     cv2.imshow("Image1", image)
     cv2.imshow("Mask", mask)
     cv2.imshow("test",thresh)
