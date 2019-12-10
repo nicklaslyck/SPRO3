@@ -34,6 +34,16 @@ def cleanUp():
     cv2.destroyAllWindows()
     vs.stop()
 
+def defineLines():
+        # Image parameters / set-up for selecting colors and finding lines
+    #ret, img = cap.read()
+    img = vs.read()
+    img = imutils.resize(img, width=w)
+    
+    mask = cv2.inRange(img, lower_color, upper_color) # find colors between the color limits defined earlier. This image is black and white.
+    edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=50, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
+
 
 
 # Set-up
@@ -61,7 +71,9 @@ hb = 160 # 255
 # Defines numpy array with color filter values
 lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
+
 max_slider = 40
+
 # current robot line coordinates is defined with null values.
 hx1 = 0 
 hx2 = 0
@@ -76,14 +88,7 @@ old_tempX = 320
 
 # While loop for main logic
 while True:
-    # Image parameters / set-up for selecting colors and finding lines
-    #ret, img = cap.read()
-    img = vs.read()
-    img = imutils.resize(img, width=w)
-    
-    mask = cv2.inRange(img, lower_color, upper_color) # find colors between the color limits defined earlier. This image is black and white.
-    edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
-    lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=50, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
+    defineLines()
     try:
         for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
             #print("a")
