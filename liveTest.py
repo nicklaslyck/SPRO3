@@ -61,7 +61,7 @@ while True:
     cnts = imutils.grab_contours(cnts)
     sd = ShapeDetector()
 
-    for (i in range(100)):
+    for i in range(100):
         try:
             # loop over the contours
             for c in cnts:
