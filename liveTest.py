@@ -96,6 +96,7 @@ while True:
                     0.5, (0, 0, 0), 2)
         except:
             pass
+        time.sleep(.100)
     print(confidence)
 
     cv2.imshow("Image1", image)
