@@ -32,7 +32,8 @@ hb = 125 #100
 lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
 
-
+selected = "triangle"
+confidence = 0
 w = 640
 
 #image = cv2.imread(args["image"])
@@ -59,32 +60,32 @@ while True:
         cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
     sd = ShapeDetector()
-    try:
-        # loop over the contours
-        for c in cnts:
-            # compute the center of the contour, then detect the name of the
-            # shape using only the contour
-            M = cv2.moments(c)
-            cX = int((M["m10"] / M["m00"]) * ratio)
-            cY = int((M["m01"] / M["m00"]) * ratio)
-            shape = sd.detect(c)
-            if (shape=="rectangle"):
-                print("yay")
-                
 
-            # multiply the contour (x, y)-coordinates by the resize ratio,
-            # then draw the contours and the name of the shape on the image
-            c = c.astype("float")
-            c *= ratio
-            c = c.astype("int")
-            cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
-            cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                0.5, (0, 0, 0), 2)
+    for (i = 0, i < 100, i++):
+        try:
+            # loop over the contours
+            for c in cnts:
+                # compute the center of the contour, then detect the name of the
+                # shape using only the contour
+                M = cv2.moments(c)
+                cX = int((M["m10"] / M["m00"]) * ratio)
+                cY = int((M["m01"] / M["m00"]) * ratio)
+                shape = sd.detect(c)
+                if (shape=="triangle"):
+                    confidence = confidence + 1
 
-            # show the output image
-    except:
-        print("fix your math")
-        
+                # multiply the contour (x, y)-coordinates by the resize ratio,
+                # then draw the contours and the name of the shape on the image
+                c = c.astype("float")
+                c *= ratio
+                c = c.astype("int")
+                cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
+                cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5, (0, 0, 0), 2)
+        except:
+            pass
+    print(confidence)
+
     cv2.imshow("Image1", image)
     cv2.imshow("Mask", mask)
     cv2.imshow("test",thresh)
