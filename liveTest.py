@@ -33,13 +33,13 @@ if (False):
 else: 
     
     lr = 0 #235
-    lg = 190 #25
+    lg = 160 #25
     lb = 0 #50
 
     # Defines upper color values for color filter. (blue currently)
-    hr = 40 #255
+    hr = 50 #255
     hg = 255 #50
-    hb = 135 #100
+    hb = 145 #100
 
 lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
