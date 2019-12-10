@@ -40,10 +40,6 @@ def cleanUp():
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
-def arduinoCallback1(channel):
-    state = 0
-
-
 
 GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
 
@@ -106,6 +102,86 @@ tempX = 320
 old_tempX = 320
 state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
 # While loop for main logic
+def arduinoCallback1(channel):
+    state = 0
+    print("interrupt form arduino has been triggered!")
+    #if (ser.read()==1) {
+    print("Arduino detected object!")
+    state = 1 # setting state = 1 to look for signs.
+
+    print("spam1")
+    green = 0
+    red = 0
+    compare = 0
+    for i in range(10):
+        for l in range(2):
+            image = vs.read()
+            if l == 0:
+                mask = cv2.inRange(image, lower_color_green, upper_color_green)
+            elif l == 1:
+                mask = cv2.inRange(image, lower_color_red, upper_color_red)
+            resized = imutils.resize(mask, width=300)
+            ratio = mask.shape[0] / float(resized.shape[0])
+
+            # convert the resized image to grayscale, blur it slightly,
+            # and threshold it
+            #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+            gray = resized
+            blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+            thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+
+            # find contours in the thresholded image and initialize the
+            # shape detector
+            cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+                cv2.CHAIN_APPROX_SIMPLE)
+            cnts = imutils.grab_contours(cnts)
+            sd = ShapeDetector()
+
+            try:
+                # loop over the contours
+                for c in cnts:
+                    # compute the center of the contour, then detect the name of the
+                    # shape using only the contour
+                    M = cv2.moments(c)
+                    cX = int((M["m10"] / M["m00"]) * ratio)
+                    cY = int((M["m01"] / M["m00"]) * ratio)
+                    shape = sd.detect(c)
+
+                    if (shape==packageSymbol and l==0):
+                        green = green + 1
+                    elif (shape==packageSymbol and l==1):
+                        red = red + 1
+
+                    compare = compare + 1
+
+                    # multiply the contour (x, y)-coordinates by the resize ratio,
+                    # then draw the contours and the name of the shape on the image
+                    c = c.astype("float")
+                    c *= ratio
+                    c = c.astype("int")
+                    cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
+                    cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, (0, 0, 0), 2)
+            except:
+                pass
+
+            cv2.imshow("Image1", image)
+            cv2.imshow("Mask", mask)
+            cv2.imshow("test1",thresh)
+
+            time.sleep(.100)
+    #analyse colors here..
+    print("spam2")
+    print(compare)
+    print(green)
+    print(red)
+
+    if compare > 30:
+        if (compare / (green+1)) < 5:
+            print("turn right")
+        elif (compare / (red+1)) < 5:
+            print("turn left")
+
 while True:        
     # Image parameters / set-up for selecting colors and finding lines
     img = vs.read()
