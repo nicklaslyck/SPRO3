@@ -37,9 +37,9 @@ else:
     lb = 0 #50
 
     # Defines upper color values for color filter. (blue currently)
-    hr = 30 #255
+    hr = 40 #255
     hg = 255 #50
-    hb = 120 #100
+    hb = 135 #100
 
 lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
