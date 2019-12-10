@@ -114,8 +114,8 @@ while True:
                 break
 
             time.sleep(.100)
-    print("red: "+red)
-    print("green: "+green)
+    print ("red:") , red
+    print ("green:") , green
     print(compare)
     
 cv2.destroyAllWindows()
