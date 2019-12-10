@@ -233,6 +233,7 @@ while True:
             #print("can't find line.")
             if (highLineY > 10):
                 highLineY = highLineY - 5
+            slope = 9000
 
         if (slope > -0.7 and slope < 0):
             sendLineInfo(newX = 100, oldX = old_tempX, width = w)
