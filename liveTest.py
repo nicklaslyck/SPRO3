@@ -20,14 +20,26 @@ import imutils
 
 
 # following upper and lower values are for red shapes on printed paper without assisting lights.
-lr = 240 #235
-lg = 0 #25
-lb = 0 #50
+if (False):
 
-# Defines upper color values for color filter. (blue currently)
-hr = 255 #255
-hg = 75 #50
-hb = 125 #100
+    lr = 240 #235
+    lg = 0 #25
+    lb = 0 #50
+
+    # Defines upper color values for color filter. (blue currently)
+    hr = 255 #255
+    hg = 75 #50
+    hb = 125 #100
+else 
+    
+    lr = 0 #235
+    lg = 190 #25
+    lb = 0 #50
+
+    # Defines upper color values for color filter. (blue currently)
+    hr = 30 #255
+    hg = 255 #50
+    hb = 120 #100
 
 lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
