@@ -214,6 +214,7 @@ while True:
                     cv2.line(img, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
             if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
                 highLineY = highLineY - 5
+            print((hy2-hy1)/(hx2-hx1))
             cv2.line(img, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
             # chr(254).encode()
             #ser.write(chr(tempX*0.39).encode())
