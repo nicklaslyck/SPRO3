@@ -85,8 +85,8 @@ hg_g = 255 #50
 hb_g = 145 #100
 
 # Defines numpy array with color filter values
-lower_color_blue = np.array([lb, lg, lr], dtype=np.uint8)
-upper_color_blue = np.array([hb, hg, hr], dtype=np.uint8)
+lower_color_blue = np.array([lb_b, lg_b, lr_b], dtype=np.uint8)
+upper_color_blue = np.array([hb_b, hg_b, hr_b], dtype=np.uint8)
 lower_color_green = np.array([lb_g, lg_g, lr_g], dtype=np.uint8)
 upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
 lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
