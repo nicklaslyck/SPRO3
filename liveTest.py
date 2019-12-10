@@ -112,6 +112,8 @@ while True:
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+                break
+                break
 
             time.sleep(.100)
     print("_________")
