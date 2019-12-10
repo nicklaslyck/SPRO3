@@ -45,7 +45,6 @@ lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
 
 selected = "triangle"
-confidence = 0
 w = 640
 
 #image = cv2.imread(args["image"])
@@ -72,8 +71,9 @@ while True:
         cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
     sd = ShapeDetector()
-
-    for i in range(100):
+    
+    confidence = 0
+    for i in range(1000):
         try:
             # loop over the contours
             for c in cnts:
