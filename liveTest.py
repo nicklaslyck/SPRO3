@@ -65,7 +65,7 @@ while True:
         # and threshold it
         #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
         gray = resized
-        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        blurred = cv2.GaussianBlur(gray, (8, 8), 0)
         thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
         # find contours in the thresholded image and initialize the
