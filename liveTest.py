@@ -62,7 +62,7 @@ while True:
             image = vs.read()
             if l:
                 mask = cv2.inRange(image, lower_color_green, upper_color_green)
-            else
+            else:
                 mask = cv2.inRange(image, lower_color_red, upper_color_red)
             resized = imutils.resize(mask, width=300)
             ratio = mask.shape[0] / float(resized.shape[0])
