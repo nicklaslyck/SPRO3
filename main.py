@@ -40,72 +40,7 @@ def cleanUp():
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
-# Set-up
-
-# Defines serial at baudrate 9600
-ser = serial.Serial('/dev/ttyUSB0', 9600) #ttyACM0 is default
-
-# camera resolution (depends on camera). This can be changed to a max of 1080p, but with the downside of longer processing time.
-w = 200
-vs = WebcamVideoStream(src=0).start()
-
-# Defines lower color values for color filters
-lr_b = 0 #0
-lg_b = 40 #40
-lb_b = 190 #190
-
-hr_b = 66 # 66
-hg_b = 126 # 126
-hb_b = 255 # 255
-
-lr_r = 240 #235
-lg_r = 0 #25
-lb_r = 0 #50
-
-hr_r = 255 #255
-hg_r = 75 #50
-hb_r = 125 #100
-
-lr_g = 0 #235
-lg_g = 160 #25
-lb_g = 0 #50
-
-hr_g = 65 #255
-hg_g = 255 #50
-hb_g = 145 #100
-
-# Defines numpy array with color filter values
-lower_color_blue = np.array([lb_b, lg_b, lr_b], dtype=np.uint8)
-upper_color_blue = np.array([hb_b, hg_b, hr_b], dtype=np.uint8)
-lower_color_green = np.array([lb_g, lg_g, lr_g], dtype=np.uint8)
-upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
-lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
-upper_color_red = np.array([hb_r, hg_r, hr_r], dtype=np.uint8)
-
-print("blyat")
-max_slider = 40
-
-# current robot line coordinates is defined with null values.
-hx1 = 0 
-hx2 = 0
-hy1 = 0
-hy2 = 0
-
-packageSymbol = "rectangle"
-# highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
-# This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
-highLineY = 0
-tempX = 320
-old_tempX = 320
-state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
-# While loop for main logic
 def arduinoCallback1(channel):
-    state = 0
-    print("interrupt form arduino has been triggered!")
-    #if (ser.read()==1) {
-    print("Arduino detected object!")
-    state = 1 # setting state = 1 to look for signs.
-
     print("spam1")
     green = 0
     red = 0
@@ -180,8 +115,67 @@ def arduinoCallback1(channel):
             print("turn left")
 
 
-
 GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
+
+# Set-up
+
+# Defines serial at baudrate 9600
+ser = serial.Serial('/dev/ttyUSB0', 9600) #ttyACM0 is default
+
+# camera resolution (depends on camera). This can be changed to a max of 1080p, but with the downside of longer processing time.
+w = 200
+vs = WebcamVideoStream(src=0).start()
+
+# Defines lower color values for color filters
+lr_b = 0 #0
+lg_b = 40 #40
+lb_b = 190 #190
+
+hr_b = 66 # 66
+hg_b = 126 # 126
+hb_b = 255 # 255
+
+lr_r = 240 #235
+lg_r = 0 #25
+lb_r = 0 #50
+
+hr_r = 255 #255
+hg_r = 75 #50
+hb_r = 125 #100
+
+lr_g = 0 #235
+lg_g = 160 #25
+lb_g = 0 #50
+
+hr_g = 65 #255
+hg_g = 255 #50
+hb_g = 145 #100
+
+# Defines numpy array with color filter values
+lower_color_blue = np.array([lb_b, lg_b, lr_b], dtype=np.uint8)
+upper_color_blue = np.array([hb_b, hg_b, hr_b], dtype=np.uint8)
+lower_color_green = np.array([lb_g, lg_g, lr_g], dtype=np.uint8)
+upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
+lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
+upper_color_red = np.array([hb_r, hg_r, hr_r], dtype=np.uint8)
+
+print("blyat")
+max_slider = 40
+
+# current robot line coordinates is defined with null values.
+hx1 = 0 
+hx2 = 0
+hy1 = 0
+hy2 = 0
+
+packageSymbol = "rectangle"
+# highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
+# This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
+highLineY = 0
+tempX = 320
+old_tempX = 320
+state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
+# While loop for main logic
 while True:        
     # Image parameters / set-up for selecting colors and finding lines
     img = vs.read()
@@ -234,6 +228,8 @@ while True:
         old_tempX = tempX
     elif state == 1:
         print("old position of state 1 code")
+
+        GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
 
     showImage() # run showImage(False) to disable imageview.
 
