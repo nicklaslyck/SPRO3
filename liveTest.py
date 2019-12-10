@@ -53,6 +53,7 @@ vs = WebcamVideoStream(src=0).start()
 while True:
 
     confidence = 0
+    compare = 0
     for i in range(10):
         image = vs.read()
         mask = cv2.inRange(image, lower_color, upper_color)
@@ -85,6 +86,7 @@ while True:
                 shape = sd.detect(c)
                 if (shape=="triangle"):
                     confidence = confidence + 1
+                compare = compare + 1
 
                 # multiply the contour (x, y)-coordinates by the resize ratio,
                 # then draw the contours and the name of the shape on the image
@@ -100,12 +102,13 @@ while True:
         cv2.imshow("Image1", image)
         cv2.imshow("Mask", mask)
         cv2.imshow("test",thresh)
-        
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
         time.sleep(.100)
     print(confidence)
+    print(compare)
     
 cv2.destroyAllWindows()
 vs.stop()
