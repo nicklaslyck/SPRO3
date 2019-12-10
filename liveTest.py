@@ -57,9 +57,9 @@ while True:
     for i in range(10):
         for l in range(2):
             image = vs.read()
-            if l == 1:
+            if l == 0:
                 mask = cv2.inRange(image, lower_color_green, upper_color_green)
-            elif l == 2:
+            elif l == 1:
                 mask = cv2.inRange(image, lower_color_red, upper_color_red)
             resized = imutils.resize(mask, width=300)
             ratio = mask.shape[0] / float(resized.shape[0])
@@ -88,9 +88,9 @@ while True:
                     cY = int((M["m01"] / M["m00"]) * ratio)
                     shape = sd.detect(c)
 
-                    if (shape==selected and l==1):
+                    if (shape==selected and l==0):
                         green = green + 1
-                    elif (shape==selected and l==2):
+                    elif (shape==selected and l==1):
                         red = red + 1
 
                     compare = compare + 1
