@@ -91,9 +91,9 @@ while True:
                     cY = int((M["m01"] / M["m00"]) * ratio)
                     shape = sd.detect(c)
 
-                    if (shape==selected and l):
+                    if (shape==selected and l==1):
                         green = green + 1
-                    elif (shape==selected and !l):
+                    elif (shape==selected and l==0):
                         red = red + 1
 
                     compare = compare + 1
