@@ -96,14 +96,16 @@ while True:
                     0.5, (0, 0, 0), 2)
         except:
             pass
+
+        cv2.imshow("Image1", image)
+        cv2.imshow("Mask", mask)
+        cv2.imshow("test",thresh)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
         time.sleep(.100)
     print(confidence)
-
-    cv2.imshow("Image1", image)
-    cv2.imshow("Mask", mask)
-    cv2.imshow("test",thresh)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
     
 cv2.destroyAllWindows()
 vs.stop()
