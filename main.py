@@ -227,9 +227,9 @@ while True:
         print(red)
 
         if compare > 30:
-            if (compare / (green+1)) > 3:
-                print(compare / (green+1))
-            elif (compare / (red+1)) > 3:
+            if (compare / (green+1)) < 3:
+                print("turn right")
+            elif (compare / (red+1)) < 3:
                 print("turn left")
         state = 0
 
