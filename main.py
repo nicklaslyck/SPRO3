@@ -47,7 +47,6 @@ w = 200
 #cap.set(3,width)
 #cap.set(4,height)
 vs = WebcamVideoStream(src=0).start()
-max_slider = 40
 
 # Defines lower color values for color filter. (blue currently)
 lr = 0 #0
@@ -64,10 +63,7 @@ lower_color = np.array([lb, lg, lr], dtype=np.uint8)
 upper_color = np.array([hb, hg, hr], dtype=np.uint8)
 
 # current robot line coordinates is defined with null values.
-hx1 = 0
-hx2 = 0
-hy1 = 0
-hy2 = 0
+hx1 = 0, hx2 = 0, hy1 = 0, hy2 = 0
 
 # highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
 # This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
@@ -84,7 +80,7 @@ while True:
     
     mask = cv2.inRange(img, lower_color, upper_color) # find colors between the color limits defined earlier. This image is black and white.
     edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
-    lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=50, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider = 40, minLineLength=50, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
     try:
         for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
             #print("a")
