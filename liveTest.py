@@ -52,28 +52,28 @@ vs = WebcamVideoStream(src=0).start()
 
 while True:
 
-    image = vs.read()
-    mask = cv2.inRange(image, lower_color, upper_color)
-    
-    resized = imutils.resize(mask, width=300)
-    ratio = mask.shape[0] / float(resized.shape[0])
-
-    # convert the resized image to grayscale, blur it slightly,
-    # and threshold it
-    #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
-    gray = resized
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
-
-    # find contours in the thresholded image and initialize the
-    # shape detector
-    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
-    cnts = imutils.grab_contours(cnts)
-    sd = ShapeDetector()
-    
     confidence = 0
-    for i in range(1000):
+    for i in range(10):
+        image = vs.read()
+        mask = cv2.inRange(image, lower_color, upper_color)
+        
+        resized = imutils.resize(mask, width=300)
+        ratio = mask.shape[0] / float(resized.shape[0])
+
+        # convert the resized image to grayscale, blur it slightly,
+        # and threshold it
+        #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+        gray = resized
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+
+        # find contours in the thresholded image and initialize the
+        # shape detector
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        sd = ShapeDetector()
+
         try:
             # loop over the contours
             for c in cnts:
