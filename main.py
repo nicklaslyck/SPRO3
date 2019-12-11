@@ -39,7 +39,11 @@ state = 0
 def arduinoCallback1(channel):
     global state
     print("checkpoint1")
-    state = 1
+    if ser.read() == int(1):
+        state = 1
+        print("state set to 1")
+    else:
+        print("serial read was not 1.")
     
 
 
@@ -53,14 +57,15 @@ ser = serial.Serial('/dev/ttyACM0', 9600) #ttyACM0 is default
 # camera resolution (depwhends on camera). This can be changed to a max of 1080p, but with the downside of longer processing time.
 w = 200
 vs = WebcamVideoStream(src=0).start()
+ 
 
 # Defines lower color values for color filters
 lr_b = 0 #0
-lg_b = 40 #40
+lg_b = 160 #40
 lb_b = 190 #190
 
-hr_b = 130 # 66
-hg_b = 176 # 126
+hr_b = 30 # 66
+hg_b = 255 # 126
 hb_b = 255 # 255
 
 lr_r = 200 #235
@@ -244,16 +249,20 @@ while True:
 
                 time.sleep(.100)
         #analyse colors here..
-        print("spam2")
+        print("shape info:")
         print(compare)
         print(green)
         print(red)
 
         if compare > 30 and compare < 45:
             if (compare / (green+1)) < 5:
-                print("turn right")
+                print("turning right...")
+                ser.write(chr(int(126)).encode())
+                time.sleep(.5)
             elif (compare / (red+1)) < 5:
-                print("turn left")
+                print("turn left...")
+                ser.write(chr(int(2)).encode())
+                time.sleep(.5)
             else:
                 print("bad shapes...")
         else:
