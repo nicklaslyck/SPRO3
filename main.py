@@ -121,9 +121,19 @@ while True:
     
     if state == 0:
 
+        #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
+        #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
+        
         mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
-        edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
+        blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
+        thresh1 = cv2.threshold(blurred1, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+
+        edges = cv2.Canny(thresh1,50,100) # Find edges from the previously defined mask.
+
+
+
         lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
+
 
         try:
             for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
@@ -187,6 +197,7 @@ while True:
         try:
             cv2.imshow("Res1", image) # Displays image windows
             cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
+            cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
         except:
             print("can't show camera...")
 
