@@ -255,13 +255,13 @@ while True:
                         #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
                         #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
                         #    0.5, (0, 0, 0), 2)
+                        
                 except:
                     pass
 
                 #cv2.imshow("Image1", image)
                 #cv2.imshow("mask1", mask1)
                 cv2.imshow("thresh",thresh)
-
                 time.sleep(.100)
         #analyse colors here..
         print("shape info:")
