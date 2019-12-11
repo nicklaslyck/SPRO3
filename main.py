@@ -37,6 +37,7 @@ GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 state = 0
 
 def arduinoCallback1(channel):
+    global state
     print("checkpoint1")
     state = 1
     
