@@ -12,6 +12,8 @@ import imutils
 import RPi.GPIO as GPIO
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
+print("sleeping for 2 sec")
+time.sleep(2)
 
 def sendLineInfo(newX,oldX,width):
     try:
@@ -59,7 +61,6 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 # Set-up
 
 # Defines serial at baudrate 9600
-ser = serial.Serial('/dev/ttyACM0', 9600) #ttyACM0 is default
 
 # camera resolution (depwhends on camera). This can be changed to a max of 1080p, but with the downside of longer processing time.
 w = 200
