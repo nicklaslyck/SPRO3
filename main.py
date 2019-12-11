@@ -268,7 +268,7 @@ while True:
         print(green)
         print(red)
 
-        if compare > 30 and compare < 45:
+        if compare > 30 and compare < 55:
             if (compare / (green+1)) < 5:
                 print("turning right...")
                 ser.write(chr(int(126)).encode())
