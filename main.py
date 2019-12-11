@@ -135,7 +135,7 @@ hr_b = 130 # 66
 hg_b = 176 # 126
 hb_b = 255 # 255
 
-lr_r = 240 #235
+lr_r = 220 #235
 lg_r = 0 #25
 lb_r = 0 #50
 
@@ -144,12 +144,12 @@ hg_r = 75 #50
 hb_r = 125 #100
 
 lr_g = 0 #235
-lg_g = 160 #25
+lg_g = 150 #25
 lb_g = 0 #50
 
-hr_g = 65 #255
+hr_g = 90 #255
 hg_g = 255 #50
-hb_g = 145 #100
+hb_g = 165 #100
 
 # Defines numpy array with color filter values
 lower_color_blue = np.array([lb_b, lg_b, lr_b], dtype=np.uint8)
