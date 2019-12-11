@@ -38,7 +38,7 @@ def cleanUp():
 
 try:
     cleanUp()
-except
+except:
     print("error cleaning up...")
     pass
 
