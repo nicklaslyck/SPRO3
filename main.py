@@ -125,8 +125,8 @@ while True:
         #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
         
         mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
-        blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
-        thresh1 = cv2.threshold(blurred1, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+        #blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
+        thresh1 = cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
         edges = cv2.Canny(thresh1,50,100) # Find edges from the previously defined mask.
 
@@ -220,7 +220,7 @@ while True:
                 # and threshold it
                 #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
                 gray = resized
-                blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+                blurred = cv2.GaussianBlur(gray, (7, 7), 0)
                 thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
                 # find contours in the thresholded image and initialize the
