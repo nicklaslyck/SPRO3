@@ -258,11 +258,10 @@ while True:
                         
                 except:
                     pass
-
+                cv2.imshow("thresh",thresh)
                 #cv2.imshow("Image1", image)
                 #cv2.imshow("mask1", mask1)
-                cv2.imshow("thresh",thresh)
-                time.sleep(.100)
+                time.sleep(.200)
         #analyse colors here..
         print("shape info:")
         print(compare)
