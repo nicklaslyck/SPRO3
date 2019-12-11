@@ -197,7 +197,7 @@ while True:
         try:
             cv2.imshow("Res1", image) # Displays image windows
             cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
-            cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
+            #cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
         except:
             print("can't show camera...")
 
