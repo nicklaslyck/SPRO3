@@ -24,7 +24,7 @@ def sendLineInfo(newX,oldX,width):
 def showImage(show = True):
     if show:
         try:
-            cv2.imshow("Res1", img) # Displays image windows
+            cv2.imshow("Res1", image) # Displays image windows
             cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
         except:
             print("can't show camera")
@@ -49,11 +49,11 @@ def arduinoCallback1(channel):
         for l in range(2):
             image = vs.read()
             if l == 0:
-                mask = cv2.inRange(image, lower_color_green, upper_color_green)
+                mask1 = cv2.inRange(image, lower_color_green, upper_color_green)
             elif l == 1:
-                mask = cv2.inRange(image, lower_color_red, upper_color_red)
-            resized = imutils.resize(mask, width=300)
-            ratio = mask.shape[0] / float(resized.shape[0])
+                mask1 = cv2.inRange(image, lower_color_red, upper_color_red)
+            resized = imutils.resize(mask1, width=300)
+            ratio = mask1.shape[0] / float(resized.shape[0])
 
             # convert the resized image to grayscale, blur it slightly,
             # and threshold it
@@ -98,8 +98,8 @@ def arduinoCallback1(channel):
                 pass
 
             cv2.imshow("Image1", image)
-            cv2.imshow("Mask", mask)
-            cv2.imshow("test1",thresh)
+            cv2.imshow("mask1", mask1)
+            cv2.imshow("thresh",thresh)
 
             time.sleep(.100)
     #analyse colors here..
@@ -107,6 +107,7 @@ def arduinoCallback1(channel):
     print(compare)
     print(green)
     print(red)
+    cv2.destroyAllWindows()
 
     if compare > 30:
         if (compare / (green+1)) < 5:
@@ -178,12 +179,12 @@ state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: del
 # While loop for main logic
 while True:        
     # Image parameters / set-up for selecting colors and finding lines
-    img = vs.read()
-    img = imutils.resize(img, width=w)
+    image = vs.read()
+    image = imutils.resize(image, width=w)
     
     if state == 0:
 
-        mask = cv2.inRange(img, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
+        mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
         edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
         lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
 
