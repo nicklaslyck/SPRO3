@@ -105,6 +105,7 @@ while True:
     # Image parameters / set-up for selecting colors and finding lines
     image = vs.read()
     image = imutils.resize(image, width=w)
+    print(state)
     
     if state == 0:
 
