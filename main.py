@@ -258,7 +258,7 @@ while True:
                 print("turn left")
         else:
             print("not enough shapes found...")
-        state = 0
+        #state = 0
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
