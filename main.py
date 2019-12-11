@@ -36,6 +36,12 @@ def cleanUp():
     vs.stop()
     GPIO.cleanup()
 
+try:
+    cleanUp()
+except
+    print("error cleaning up...")
+    pass
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
