@@ -34,6 +34,8 @@ def cleanUp():
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
+state = 0
+
 def arduinoCallback1(channel):
     print("checkpoint1")
     state = 1
@@ -99,7 +101,7 @@ packageSymbol = "rectangle"
 highLineY = 0
 tempX = 320
 old_tempX = 320
-state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
+ #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
 # While loop for main logic
 while True: 
     # Image parameters / set-up for selecting colors and finding lines
