@@ -254,7 +254,7 @@ while True:
                 print("turn right")
             elif (compare / (red+1)) < 5:
                 print("turn left")
-            else
+            else:
                 print("bad shapes...")
         else:
             print("not enough, or too many shapes found...")
