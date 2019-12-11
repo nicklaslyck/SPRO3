@@ -272,17 +272,21 @@ while True:
         if compare > 30 and compare < 55:
             if (compare / (green+1)) < 5:
                 print("turning right...")
+                ser.write(chr(int(1)).encode())
                 ser.write(chr(int(126)).encode())
                 time.sleep(.5)
             elif (compare / (red+1)) < 5:
                 print("turn left...")
+                ser.write(chr(int(1)).encode())
                 ser.write(chr(int(2)).encode())
                 time.sleep(.5)
             else:
                 print("bad shapes...")
+                ser.write(chr(int(2)).encode())
         else:
             print("not enough, or too many shapes found...")
-
+            ser.write(chr(int(2)).encode())
+        ser.write(chr(int(0)).encode())
         state = 0
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
