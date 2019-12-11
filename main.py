@@ -32,12 +32,11 @@ def cleanUp():
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-GPIO.setup(12, GPIO.OUT)
 
 GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
 servoPWM.start(50)
-#servoPWM.ChangeDutyCycle(dc in %)
+servoPWM.ChangeDutyCycle(50)
 
 state = 0
 
