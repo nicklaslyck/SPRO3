@@ -11,6 +11,8 @@ import time
 import imutils
 import RPi.GPIO as GPIO
 
+ser = serial.Serial('/dev/ttyACM0', 9600)
+
 def sendLineInfo(newX,oldX,width):
     try:
         if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
@@ -42,7 +44,7 @@ state = 0
 
 def arduinoCallback1(channel):
     global state
-    print("checkpoint1")
+    print("interrupt triggered...")
     if ser.read() == int(1):
         state = 1
         print("state set to 1")
