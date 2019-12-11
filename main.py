@@ -46,11 +46,11 @@ def arduinoCallback1(channel):
     global state
     print("interrupt triggered...")
     print(int(ser.read()))
-    #if ser.read() == int(1):
-        #state = 1
-        #print("state set to 1")
-    #else:
-        #print("serial read was not 1.")
+    if ser.read() == b'\x01':
+        state = 1
+        print("state set to 1")
+    else:
+        print("serial read was not 1.")
     
 
 
