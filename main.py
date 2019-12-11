@@ -249,13 +249,16 @@ while True:
         print(green)
         print(red)
 
-        if compare > 30:
+        if compare > 30 and compare < 45:
             if (compare / (green+1)) < 5:
                 print("turn right")
             elif (compare / (red+1)) < 5:
                 print("turn left")
+            else
+                print("bad shapes...")
         else:
-            print("not enough shapes found...")
+            print("not enough, or too many shapes found...")
+
         state = 0
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
