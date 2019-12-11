@@ -34,9 +34,9 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(12, GPIO.OUT)
 
-#GPIO.setup(18, GPIO.OUT)
-#servoPWM = GPIO.PWM(0, 50) # channel 0, 50hz PWM frequency
-#servoPWM.start(50)
+GPIO.setup(18, GPIO.OUT)
+servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
+servoPWM.start(50)
 #servoPWM.ChangeDutyCycle(dc in %)
 
 state = 0
@@ -44,11 +44,11 @@ state = 0
 def arduinoCallback1(channel):
     global state
     print("checkpoint1")
-    #if ser.read() == int(1):
-    state = 1
-    print("state set to 1")
-    #else:
-        #print("serial read was not 1.")
+    if ser.read() == int(1):
+        state = 1
+        print("state set to 1")
+    else:
+        print("serial read was not 1.")
     
 
 
