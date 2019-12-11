@@ -108,7 +108,6 @@ while True:
     # Image parameters / set-up for selecting colors and finding lines
     image = vs.read()
     image = imutils.resize(image, width=w)
-    print(state)
     
     if state == 0:
 
@@ -189,7 +188,6 @@ while True:
             for l in range(2):
                 image = vs.read()
 
-                print("checkpoint2")
                 if l == 0:
                     mask1 = cv2.inRange(image, lower_color_green, upper_color_green)
                 elif l == 1:
@@ -204,7 +202,6 @@ while True:
                 blurred = cv2.GaussianBlur(gray, (7, 7), 0)
                 thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
-                print("checkpoint3")
                 # find contours in the thresholded image and initialize the
                 # shape detector
                 cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
@@ -212,7 +209,6 @@ while True:
                 cnts = imutils.grab_contours(cnts)
                 sd = ShapeDetector()
 
-                print("checkpoint4")
                 try:
                     # loop over the contours
                     for c in cnts:
@@ -228,7 +224,6 @@ while True:
                         elif (shape==packageSymbol and l==1):
                             red = red + 1
 
-                        print("checkpoint5")
 
                         compare = compare + 1
 
@@ -261,7 +256,7 @@ while True:
                 print("turn left")
         else:
             print("not enough shapes found...")
-        #state = 0
+        state = 0
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
