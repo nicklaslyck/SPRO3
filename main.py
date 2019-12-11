@@ -66,7 +66,7 @@ vs = WebcamVideoStream(src=0).start()
 
 # Defines lower color values for color filters
 lr_b = 0 #0
-lg_b = 150 #40
+lg_b = 130 #40
 lb_b = 160 #190
 
 hr_b = 130 # 66
