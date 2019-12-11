@@ -36,7 +36,7 @@ GPIO.setup(12, GPIO.OUT)
 
 GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
-servoPWM.start(20)
+servoPWM.start(50)
 #servoPWM.ChangeDutyCycle(dc in %)
 
 state = 0
