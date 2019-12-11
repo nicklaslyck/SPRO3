@@ -114,6 +114,9 @@ def arduinoCallback1(channel):
             print("turn right")
         elif (compare / (red+1)) < 5:
             print("turn left")
+    else:
+        print("not enough shapes found...")
+    state = 0
 
 
 GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
@@ -212,7 +215,7 @@ while True:
                         highLineY = y2
                 else:
                     #print("what")
-                    cv2.line(img, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
+                    cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
             if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
                 highLineY = highLineY - 5
 
@@ -224,7 +227,7 @@ while True:
                 slope = (hy2-hy1)/(hx2-hx1)
 
             
-            cv2.line(img, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
+            cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
             # chr(254).encode()
             #ser.write(chr(tempX*0.39).encode())
             #print(chr(tempX*0.39).encode())
@@ -248,8 +251,6 @@ while True:
         old_tempX = tempX
     elif state == 1:
         print("old position of state 1 code")
-
-        GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
 
     showImage() # run showImage(False) to disable imageview.
 
