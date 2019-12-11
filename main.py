@@ -193,7 +193,7 @@ old_tempX = 320
 state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
 # While loop for main logic
 while True:
-    vs = WebcamVideoStream(src=0).start()     
+    #vs = WebcamVideoStream(src=0).start()     
     # Image parameters / set-up for selecting colors and finding lines
     image = vs.read()
     image = imutils.resize(image, width=w)
