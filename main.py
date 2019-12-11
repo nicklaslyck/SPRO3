@@ -36,99 +36,13 @@ def cleanUp():
     vs.stop()
     GPIO.cleanup()
 
-try:
-    cv2.destroyAllWindows()
-except:
-    print("error cleaning up...")
-    pass
-
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 def arduinoCallback1(channel):
     print("checkpoint1")
-    green = 0
-    red = 0
-    compare = 0
-    for i in range(10):
-        for l in range(2):
-            image = vs.read()
-
-            print("checkpoint2")
-            if l == 0:
-                mask1 = cv2.inRange(image, lower_color_green, upper_color_green)
-            elif l == 1:
-                mask1 = cv2.inRange(image, lower_color_red, upper_color_red)
-            resized = imutils.resize(mask1, width=300)
-            ratio = mask1.shape[0] / float(resized.shape[0])
-
-            # convert the resized image to grayscale, blur it slightly,
-            # and threshold it
-            #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
-            gray = resized
-            blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-            thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
-
-            print("checkpoint3")
-            # find contours in the thresholded image and initialize the
-            # shape detector
-            cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-                cv2.CHAIN_APPROX_SIMPLE)
-            cnts = imutils.grab_contours(cnts)
-            sd = ShapeDetector()
-
-            print("checkpoint4")
-            try:
-                # loop over the contours
-                for c in cnts:
-                    # compute the center of the contour, then detect the name of the
-                    # shape using only the contour
-                    M = cv2.moments(c)
-                    cX = int((M["m10"] / M["m00"]) * ratio)
-                    cY = int((M["m01"] / M["m00"]) * ratio)
-                    shape = sd.detect(c)
-
-                    if (shape==packageSymbol and l==0):
-                        green = green + 1
-                    elif (shape==packageSymbol and l==1):
-                        red = red + 1
-
-                    print("checkpoint5")
-
-                    compare = compare + 1
-
-                    # multiply the contour (x, y)-coordinates by the resize ratio,
-                    # then draw the contours and the name of the shape on the image
-                    c = c.astype("float")
-                    c *= ratio
-                    c = c.astype("int")
-                    #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
-                    #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                    #    0.5, (0, 0, 0), 2)
-            except:
-                pass
-
-            #cv2.imshow("Image1", image)
-            #cv2.imshow("mask1", mask1)
-            cv2.imshow("thresh",thresh)
-
-            time.sleep(.100)
-    #analyse colors here..
-    print("spam2")
-    print(compare)
-    print(green)
-    print(red)
-    cv2.destroyWindow("thresh")
-
-    if compare > 30:
-        if (compare / (green+1)) < 5:
-            print("turn right")
-        elif (compare / (red+1)) < 5:
-            print("turn left")
-    else:
-        print("not enough shapes found...")
-    state = 0
+    
 
 
 GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
@@ -192,8 +106,7 @@ tempX = 320
 old_tempX = 320
 state = 0 #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
 # While loop for main logic
-while True:
-    #vs = WebcamVideoStream(src=0).start()     
+while True: 
     # Image parameters / set-up for selecting colors and finding lines
     image = vs.read()
     image = imutils.resize(image, width=w)
