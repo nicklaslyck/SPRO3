@@ -45,7 +45,7 @@ state = 0
 def arduinoCallback1(channel):
     global state
     print("interrupt triggered...")
-    print(char(ser.read()))
+    print(chr(ser.read()))
     #if ser.read() == int(1):
         #state = 1
         #print("state set to 1")
