@@ -116,7 +116,7 @@ def arduinoCallback1(channel):
             print("turn left")
 
 
-GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=300)
+GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
 
 # Set-up
 
