@@ -37,7 +37,7 @@ def cleanUp():
     GPIO.cleanup()
 
 try:
-    cleanUp()
+    cv2.destroyAllWindows()
 except:
     print("error cleaning up...")
     pass
@@ -47,13 +47,15 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 def arduinoCallback1(channel):
-    print("spam1")
+    print("checkpoint1")
     green = 0
     red = 0
     compare = 0
     for i in range(10):
         for l in range(2):
             image = vs.read()
+
+            print("checkpoint2")
             if l == 0:
                 mask1 = cv2.inRange(image, lower_color_green, upper_color_green)
             elif l == 1:
@@ -68,6 +70,7 @@ def arduinoCallback1(channel):
             blurred = cv2.GaussianBlur(gray, (7, 7), 0)
             thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
+            print("checkpoint3")
             # find contours in the thresholded image and initialize the
             # shape detector
             cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
@@ -75,6 +78,7 @@ def arduinoCallback1(channel):
             cnts = imutils.grab_contours(cnts)
             sd = ShapeDetector()
 
+            print("checkpoint4")
             try:
                 # loop over the contours
                 for c in cnts:
@@ -90,6 +94,8 @@ def arduinoCallback1(channel):
                     elif (shape==packageSymbol and l==1):
                         red = red + 1
 
+                    print("checkpoint5")
+
                     compare = compare + 1
 
                     # multiply the contour (x, y)-coordinates by the resize ratio,
@@ -97,14 +103,14 @@ def arduinoCallback1(channel):
                     c = c.astype("float")
                     c *= ratio
                     c = c.astype("int")
-                    cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
-                    cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.5, (0, 0, 0), 2)
+                    #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
+                    #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                    #    0.5, (0, 0, 0), 2)
             except:
                 pass
 
-            cv2.imshow("Image1", image)
-            cv2.imshow("mask1", mask1)
+            #cv2.imshow("Image1", image)
+            #cv2.imshow("mask1", mask1)
             cv2.imshow("thresh",thresh)
 
             time.sleep(.100)
@@ -113,7 +119,7 @@ def arduinoCallback1(channel):
     print(compare)
     print(green)
     print(red)
-    cv2.destroyAllWindows()
+    cv2.destroyWindow("thresh")
 
     if compare > 30:
         if (compare / (green+1)) < 5:
