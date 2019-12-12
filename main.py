@@ -39,10 +39,10 @@ GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
-servoPWM.start(50)
+servoPWM.start(int(50/100)+1)
 
-servoPosition = 50 # position in %
-servoPWM.ChangeDutyCycle(int(servoPosition/100)+1)
+#servoPosition = 50 # position in %
+#servoPWM.ChangeDutyCycle(int(servoPosition/100)+1)
 
 
 
