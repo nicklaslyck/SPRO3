@@ -275,12 +275,12 @@ while True:
                 print("turning right...")
                 ser.write(chr(int(1)).encode()) 
                 ser.write(chr(int(126)).encode())
-                time.sleep(.5)
+                time.sleep(1.2)
             elif (compare / (red+1)) < 5:
                 print("turn left...")
                 ser.write(chr(int(1)).encode())
                 ser.write(chr(int(2)).encode())
-                time.sleep(.5)
+                time.sleep(1.2)
             else:
                 print("bad shapes...")
                 ser.write(chr(int(2)).encode())
