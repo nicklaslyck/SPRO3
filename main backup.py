@@ -123,7 +123,7 @@ while True:
     image = imutils.resize(image, width=w)
     
     
-    if state == 0:
+    if state == 0 and stateDelivering:
 
         #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
         #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
@@ -285,9 +285,8 @@ while True:
                 print("bad shapes...")
                 ser.write(chr(int(2)).encode())
         else:
-            print("not enough, or too many shapes found....")
+            print("not enough, or too many shapes found...")
             ser.write(chr(int(2)).encode())
-            ser.write(chr(int(4)).encode())
 
         ser.write(chr(int(0)).encode())
         state = 0
@@ -296,7 +295,7 @@ while True:
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
+        ser.write(chr(int()).encode()) # sending 0 over serial to stop movement.
         break # Stops program if button "q" is pressed.
         
 cleanUp()
