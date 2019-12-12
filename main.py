@@ -116,7 +116,7 @@ while True:
     image = vs.read()
     image = imutils.resize(image, width=w)
     
-    servoPosition = 100 # position in %
+    servoPosition = 30 # position in %
     servoPWM.ChangeDutyCycle((servoPosition/100)+1)
     
     if state == 0:
