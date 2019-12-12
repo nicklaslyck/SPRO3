@@ -41,8 +41,6 @@ GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
 servoPWM.start(50)
 
-servoPosition = 50 # position in %
-servoPWM.ChangeDutyCycle((servoPosition/100)+1)
 
 state = 0
 
@@ -117,7 +115,9 @@ while True:
     # Image parameters / set-up for selecting colors and finding lines
     image = vs.read()
     image = imutils.resize(image, width=w)
-    servoPWM.ChangeDutyCycle(50)
+    
+    servoPosition = 100 # position in %
+    servoPWM.ChangeDutyCycle((servoPosition/100)+1)
     
     if state == 0:
 
