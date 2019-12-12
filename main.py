@@ -17,9 +17,9 @@ time.sleep(2)
 
 def sendLineInfo(newX,oldX,width):
     try:
-        if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
-            ser.write(chr(int(newX*(126/width))+1).encode()) 
-            print("writing serial value: " + str(int(newX*(126/width))+1))
+        #if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
+        ser.write(chr(int(newX*(126/width))+1).encode()) 
+        print("writing serial value: " + str(int(newX*(126/width))+1))
 
     except:
         print("No new line info. No serial written.")
@@ -40,29 +40,25 @@ GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
 servoPWM.start(50)
-servoPWM.ChangeDutyCycle(50)
+
+servoPosition = 50 # position in %
+servoPWM.ChangeDutyCycle((servoPosition/100)+1)
 
 state = 0
 
 def arduinoCallback1(channel):
     global state
     print("interrupt triggered...")
-    #print(ser.read())
-    if ser.read() == b'\x01':
+    read = ser.read()
+    if read == b'\x01':
         state = 1
-        print("state set to 1")
+        print("recieved 1, looking for sign...")
     else:
         print("serial read was not 1.")
-    
+
 
 
 GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
-
-# Set-up
-
-# Defines serial at baudrate 9600
-
-# camera resolution (depwhends on camera). This can be changed to a max of 1080p, but with the downside of longer processing time.
 w = 200
 vs = WebcamVideoStream(src=0).start()
  
@@ -109,7 +105,7 @@ hx2 = 0
 hy1 = 0
 hy2 = 0
 
-packageSymbol = "rectangle"
+packageSymbol = "triangle"
 # highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
 # This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
 highLineY = 0
@@ -121,6 +117,7 @@ while True:
     # Image parameters / set-up for selecting colors and finding lines
     image = vs.read()
     image = imutils.resize(image, width=w)
+    servoPWM.ChangeDutyCycle(50)
     
     if state == 0:
 
@@ -286,6 +283,7 @@ while True:
         else:
             print("not enough, or too many shapes found...")
             ser.write(chr(int(2)).encode())
+
         ser.write(chr(int(0)).encode())
         state = 0
 
