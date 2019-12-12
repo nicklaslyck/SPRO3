@@ -285,7 +285,7 @@ while True:
                 print("bad shapes...")
                 ser.write(chr(int(2)).encode())
         else:
-            print("not enough, or too many shapes found....")
+            print("not enough, or too many shapes found.....")
             ser.write(chr(int(2)).encode())
             ser.write(chr(int(4)).encode())
 
