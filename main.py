@@ -292,7 +292,7 @@ while True:
         ser.write(chr(int(0)).encode())
         state = 0
 
-    elif not stateDelivering:
+    #elif not stateDelivering:
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
