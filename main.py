@@ -41,6 +41,10 @@ GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
 servoPWM.start(50)
 
+servoPosition = 50 # position in %
+servoPWM.ChangeDutyCycle(int(servoPosition/100)+1)
+
+
 
 state = 0
 
@@ -116,8 +120,6 @@ while True:
     image = vs.read()
     image = imutils.resize(image, width=w)
     
-    servoPosition = 50 # position in %
-    servoPWM.ChangeDutyCycle((servoPosition/100)+1)
     
     if state == 0:
 
