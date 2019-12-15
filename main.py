@@ -111,7 +111,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 count = 0
-ser.write(chr(int(-120)).encode())
+ser.write(chr(int(130)).encode())
 #stateDelivering = True
 while True: 
     print("stateDelivering: " + str(stateDelivering))
