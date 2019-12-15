@@ -371,14 +371,15 @@ while True:
                 count = 0
                 lookingForSign = 0
                 stateDelivering = False
+
             elif count == 0:
                 ser.write(chr(int(1)).encode())
                 time.sleep(0.5)
                 ser.write(chr(int(2)).encode())
-                time.sleep(0.8)
+                time.sleep(0.7)
                 ser.write(chr(int(0)).encode())
                 print("turning left")
-                count += 1
+                count = 1
                 lookingForSign = 0
 
 
