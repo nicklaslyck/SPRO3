@@ -413,8 +413,9 @@ while True:
                             #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
                             #    0.5, (0, 0, 0), 2)
                             
-                    except:
-                        pass
+                    except Exception as e:
+                        print(e)
+
                     cv2.imshow("thresh",thresh)
                     #cv2.imshow("Image1", image)
                     #cv2.imshow("mask1", mask1)
