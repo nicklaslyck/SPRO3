@@ -97,7 +97,7 @@ def arduinoCallback1(channel):
     read = ser.read()
     if read == b'\x01':
         lookingForSign = 1
-        print("recieved 1, looking for sign...")
+        print("metal detected.")
     elif read == b'\x02':                              # 13.8v battery
         print("powering off")
         sp.Popen("sudo poweroff")
@@ -116,6 +116,7 @@ while True:
     packageSymbol = "triangle"
     # Image parameters / set-up for selecting colors and finding lines
     if not stateDelivering:
+    print()
         if lookingForSign and packageSymbol == "":
             #TURN CAMERA UP
             compare = 0
