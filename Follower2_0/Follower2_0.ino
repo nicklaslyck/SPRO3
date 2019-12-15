@@ -51,19 +51,19 @@ static uint8_t motor_mode = FAST;
 #define OBALARM 1
 #define UNDERVOLTAGE 2
 #define LOWVOLTAGE 3
-#define BOXLOADED 4 //@TODO define value for box loaded
+#define BOXLOADED 4200 //@TODO define value for box loaded
 
 	//meddage recieve
 #define MESSAGEOK 246
 #define SIGN 1
-#define NOSIGN 2
-#define STORAGE 253
+#define TAKE 2
+#define DROP 3
 #define GOTOSLOW 252
 #define GOTOFAST 251
 #define LIFTUP 600 //@TODO set the proper value
 #define STOP 0
-#define TAKE 4
-#define DROP 3
+//#define TAKE 4
+//#define DROP 3
 
 typedef enum
 {
@@ -275,10 +275,11 @@ static void handleBattery(void)
 	if (voltage < MINVOLTAGE)
 	{
 		motor_stop();
-        PORTC &= ~(1 << PORTC2);
-        _delay_ms(10);
-        PORTC |= (1 << PORTC2);
-        rasPi_send(UNDERVOLTAGE);
+    
+                PORTC &= ~(1 << PORTC2);
+                _delay_ms(10);
+                PORTC |= (1 << PORTC2);
+                rasPi_send(UNDERVOLTAGE);
 		while (rasPiState == false)
 		{
 			if (rasPi_recieve() == MESSAGEOK)
@@ -316,7 +317,9 @@ static void met_actions(void)
   static bool rasPiState = false;
   static unsigned char message = 0;
   if (metAlarm == TRUE)
+  //&& cleared == TRUE)
   //&& cleared)
+  
   {
     motor_stop();
 	PCMSK1 &= ~(1 << PCINT11);
@@ -333,40 +336,27 @@ static void met_actions(void)
         //motor_mode = SLOW;
         //obIgnore = true;
       }
-      else if (message == NOSIGN) //Actions to do when no sign is present
+      else if (message == TAKE) //Actions to do when no sign is present
       {
-        while (rasPiState == false)
-        {
-          message = rasPi_recieve();
-          if (message == TAKE)
-          {
-            lift_control(UP);
-			M1F = 1 * motor_mode;
-			M2F = 1 * motor_mode;
-			_delay_ms(500);
-			motor_stop();
-			//rasPi_send(BOXLOADED);
-            rasPiState = true;
-          }
-          else if (message == DROP)
-          {
-            lift_control(DOWN);
-            rasPiState = true;
-          }
-          else
-          {
-            //left empty on purpose to account for all empty cases
-          }
-        }
+        lift_control(UP);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
+        rasPiState = true;
+	  }
+      else if (message == DROP)
+      {
+        lift_control(DOWN);
+        rasPiState = true;
       }
       else
       {
-        //left empty on purpose to account for all empty cases
+            //left empty on purpose to account for all empty cases
       }
-      //handleBattery();
-      //ob_check();
     }
-    
+    //handleBattery();
+    //ob_check();
     //lift_control(UP);
     //cleared = FALSE;
     metAlarm = FALSE;
