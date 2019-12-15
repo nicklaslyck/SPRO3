@@ -358,6 +358,7 @@ while True:
             except:
                 print("can't show camera...")
         if lookingForSign:
+            time.sleep(3)
             green = 0
             red = 0
             compare = 0
