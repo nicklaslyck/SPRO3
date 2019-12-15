@@ -15,6 +15,7 @@ ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = False
 lowPower = 0
 lookingForSign = 0
+count = 0
 print("starting python")
 print("sleeping for 2 sec...")
 
@@ -93,6 +94,8 @@ def cleanUp():
 def arduinoCallback1(channel):
     global lookingForSign
     global lowPower
+    global stateDelivering
+    global count
     print("interrupt triggered...")
     read = ser.read()
     time.sleep(1)
@@ -100,6 +103,18 @@ def arduinoCallback1(channel):
         lookingForSign = 1
         print("metal detected.")
         #ser.write(chr(int(3)).encode())####################################################################################################################################
+
+        if count == 1 and stateDelivering:
+            print("sending 55 from interrupt and stucking in while loop")
+            ser.write(chr(int(55)).encode())
+            while True:
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
+                    break # Stops program if button "q" is pressed.
+        else:
+            print("conditions not met yet.")
+                    
+
     elif read == b'\x02':                              # 13.8v battery
         print("powering off")
         sp.Popen("sudo poweroff")
@@ -111,7 +126,6 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
-count = 0
 #stateDelivering = False
 while True: 
     #print("stateDelivering: " + str(stateDelivering))
@@ -327,14 +341,6 @@ while True:
                     highLineY = highLineY - 5
                 #slope = 9000
 
-            #if (tempX > 40 and tempX < 60):
-            #   if (slope > -0.7 and slope < 0):
-            #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
-            #    elif (slope < 0.7 and slope > 0):
-            #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
-            #    else:
-            #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
-            #else:
             if not lookingForSign:
                 sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             
