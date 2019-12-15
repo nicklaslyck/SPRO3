@@ -357,7 +357,7 @@ while True:
             print(triangles)
 
             if compare < 15 and compare > 8:
-                if triangles > squares
+                if triangles > squares:
                     shape = "triangle"
                     print("detected triangle!")
                 if triangles < squares:
