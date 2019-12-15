@@ -100,10 +100,10 @@ def arduinoCallback1(channel):
     if read == b'\x01':
         lookingForSign = 1
         print("recieved 1, looking for sign...")
-    if else read == b'\x02':                              # 13.8v battery
+    elif read == b'\x02':                              # 13.8v battery
         print("powering off")
         sp.Popen("sudo poweroff")
-    if else read == b'\x03':                              # 14v battery
+    elif read == b'\x03':                              # 14v battery
         print("setting low-power mode enabled")
         lowPower = 1
 
