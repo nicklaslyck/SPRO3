@@ -110,8 +110,8 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
-
-stateDelivering = True
+count = 0
+#stateDelivering = True
 while True: 
     image = vs.read()
     image = imutils.resize(image, width=w)
@@ -360,106 +360,17 @@ while True:
             except:
                 print("can't show camera...")
         if lookingForSign:
-            time.sleep(3)
-            green = 0
-            red = 0
-            compare = 0
-            foundSign = 0
-            for i in range(10):
-                for l in range(2):
-                    image = vs.read()
-
-                    if l == 0:
-                        mask1 = cv2.inRange(image, lower_color_green, upper_color_green)
-                    elif l == 1:
-                        mask1 = cv2.inRange(image, lower_color_red, upper_color_red)
-                    resized = imutils.resize(mask1, width=300)
-                    ratio = mask1.shape[0] / float(resized.shape[0])
-
-                    # convert the resized image to grayscale, blur it slightly,
-                    # and threshold it
-                    #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
-                    gray = resized
-                    blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-                    thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
-
-                    # find contours in the thresholded image and initialize the
-                    # shape detector
-                    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-                        cv2.CHAIN_APPROX_SIMPLE)
-                    cnts = imutils.grab_contours(cnts)
-                    sd = ShapeDetector()
-
-                    try:
-                        # loop over the contours
-                        for c in cnts:
-                            # compute the center of the contour, then detect the name of the
-                            # shape using only the contour
-                            M = cv2.moments(c)
-                            cX = int((M["m10"] / M["m00"]) * ratio)
-                            cY = int((M["m01"] / M["m00"]) * ratio)
-                            shape = sd.detect(c)
-
-                            if (shape==packageSymbol and l==0):
-                                green = green + 1
-                            elif (shape==packageSymbol and l==1):
-                                red = red + 1
-
-                            compare = compare + 1
-
-                            # multiply the contour (x, y)-coordinates by the resize ratio,
-                            # then draw the contours and the name of the shape on the image
-                            c = c.astype("float")
-                            c *= ratio
-                            c = c.astype("int")
-                            #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
-                            #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                            #    0.5, (0, 0, 0), 2)
-                            
-                    except Exception as e:
-                        print(e)
-
-                    cv2.imshow("thresh",thresh)
-                    #cv2.imshow("Image1", image).
-                    #cv2.imshow("mask1", mask1)
-                    time.sleep(.200)
-            #analyse colors here..
-            print("shape info:")
-            print(compare)
-            print(green)
-            print(red)
-
-            if compare > 30 and compare < 55:
-                if (compare / (green+1)) < 5:
-                    print("turning right...")
-                    ser.write(chr(int(1)).encode()) 
-                    ser.write(chr(int(126)).encode()) 
-                    lookingForSign = 0
-                    time.sleep(1)
-                elif (compare / (red+1)) < 5:
-                    print("turn left...")
-                    ser.write(chr(int(1)).encode())
-                    ser.write(chr(int(2)).encode())
-                    lookingForSign = 0
-                    time.sleep(1)
-                else:
-                    print("bad shapes...")
-                    print("lowering lift")
-                    ser.write(chr(int(2)).encode())
-                    ser.write(chr(int(3)).encode())
-                    stateDelivering = False
-                    lookingForSign = 0
-
-            else:
-                print("could not find enough shapes!")
-                print("lowering lift")
+            if count == 0:
+                ser.write(chr(int(1)).encode())
+                ser.write(chr(int(2)).encode())
+                time.sleep(0.5)
+                print("turning left")
+                count += 1
+            if count == 1:
                 ser.write(chr(int(2)).encode())
                 ser.write(chr(int(3)).encode())
-                stateDelivering = False
-                lookingForSign = 0
-
-            ser.write(chr(int(0)).encode())
-            lookingForSign = 0
+                time.sleep(12)
+                print("lowering lift")
 
 
 
