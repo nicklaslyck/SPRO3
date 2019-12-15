@@ -348,9 +348,9 @@ static void met_actions(void)
       else if (message == 3)
       {
         lift_control(DOWN);
-		M1B = 1 * motor_mode;
-		M2B = 1 * motor_mode;
-		_delay_ms(2000);
+		//M1B = 1 * motor_mode;
+		//M2B = 1 * motor_mode;
+		//_delay_ms(2000);
         rasPiState = TRUE;
       }
       else
