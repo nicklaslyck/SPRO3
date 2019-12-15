@@ -80,7 +80,7 @@ def sendLineInfo(newX,oldX,width):
     try:
         if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
             ser.write(chr(int(newX*(126/width))+1).encode()) 
-            #print("writing serial value: " + str(int(newX*(126/width))+1))
+            #print("writing serial value: " + str(int(newX*(126/width))+1)).
 
     except:
         print("No new line info. No serial written.")
