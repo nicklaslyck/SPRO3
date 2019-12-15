@@ -112,7 +112,6 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 count = 0
-ser.write(chr(int(200)).encode())
 #stateDelivering = False
 while True: 
     print("stateDelivering: " + str(stateDelivering))
@@ -281,7 +280,7 @@ while True:
         elif lookingForSign and not packageSymbol == "":
             print("raising lift!")
             time.sleep(1)
-            ser.write(chr(int(55)).encode()) # raises lift
+            ser.write(chr(int(2)).encode()) # raises lift
             time.sleep(10)
             time.sleep(10)
             stateDelivering = True
@@ -346,7 +345,8 @@ while True:
             #    else:
             #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             #else:
-            sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+            if not lookingForSign
+                sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             
             old_tempX = tempX
 
@@ -356,11 +356,11 @@ while True:
                 #cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
             except:
                 print("can't show camera...")
-        if lookingForSign:
+        elif lookingForSign:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                ser.write(chr(int(2)).encode())
+                ser.write(chr(int(3)).encode())
                 time.sleep(3)
                 print("lowering lift and sleeping for 12s")
                 #time.sleep(12)
