@@ -51,7 +51,7 @@ static uint8_t motor_mode = FAST;
 #define OBALARM 1
 #define UNDERVOLTAGE 2
 #define LOWVOLTAGE 3
-#define BOXLOADED 4200 //@TODO define value for box loaded
+#define BOXLOADED 4 //@TODO define value for box loaded
 
 	//meddage recieve
 #define MESSAGEOK 246
@@ -316,9 +316,8 @@ static void met_actions(void)
 {
   static bool rasPiState = false;
   static unsigned char message = 0;
-  if (metAlarm == TRUE && cleared == TRUE)
+  if (metAlarm == TRUE)
   //&& cleared)
-  
   {
     motor_stop();
     PORTC &= ~(1 << PORTC2);
@@ -342,6 +341,7 @@ static void met_actions(void)
           if (message == TAKE)
           {
             lift_control(UP);
+			rasPi_send(BOXLOADED);
             rasPiState = true;
           }
           else if (message == DROP)
