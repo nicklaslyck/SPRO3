@@ -37,7 +37,7 @@ static uint8_t motor_mode = FAST;
 #define VOLTAGEREFERENCE 4800
 #define RESOLUTION 1024.0
 #define MINVOLTAGE 3600
-#define SMALLVOLTAGE 3600
+#define SMALLVOLTAGE 3650
 
 //echo sensor variabels
 #define BAUDRATE 9600
@@ -101,7 +101,8 @@ int main(void)
 {
 	arduino_init();
 	motor_stop();
-        lift_control(DOWN);
+    lift_control(DOWN);
+	_delay_ms(1500);
 	while (1) 
 	{	
           handleBattery();
@@ -390,7 +391,7 @@ static void pin_setup(void)
 	DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)
 
 	PORTD &= ~(1 << PORTD4); //trigger pin to 0
-	PORTC &= ~(1 << PORTC3); //control pin 1 to 0
+	//PORTC &= ~(1 << PORTC3); //control pin 1 to 0
 	PORTC &= ~(1 << PORTC4); //control pin 2 to 0
 	PORTC &= ~(1 << PORTC5); //control pin 3 to 0
 
@@ -418,10 +419,10 @@ static void pin_setup(void)
 	//----------------Pi communication---------------//
 	DDRC |= (1 << DDC2); //Message ready as output
 	//PORTC &= ~(1 << PORTC2); //Message ready to 0
-        PORTC |= (1 << PORTC2);
+    PORTC |= (1 << PORTC2);
         
-        //-----------------Inductor Sensor---------------//
-        DDRC &= ~(1 << DDC3); //echo pin as input (PCINT11 pin)
+    //-----------------Inductor Sensor---------------//
+    DDRC &= ~(1 << DDC3); //echo pin as input (PCINT11 pin)
         
 }
 
@@ -434,7 +435,7 @@ static void interrupts_setup(void)
 
 	//>-- Timer setup for 1 micro second
 	TCCR1B |= (1 << WGM12); //Set the Timer Mode to CTC
-        TCCR1B |= (1 << CS11); //Set prescaler to 8 and start the timer
+    TCCR1B |= (1 << CS11); //Set prescaler to 8 and start the timer
 	//OCR1A = 1; //Set the value that you want to count to
 	///> 1 for 1 us, 19 for 10 us, 199 for 100 us
 	//TIMSK1 |= (1 << OCIE1A); //Set the ISR COMPA vect
