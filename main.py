@@ -359,7 +359,7 @@ while True:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                ser.write(chr(int(3)).encode())
+                #ser.write(chr(int(4)).encode())
                 print("lowering lift and sleeping for 12s")
                 time.sleep(12)
                 count = 0
@@ -367,14 +367,14 @@ while True:
                 stateDelivering = False
 
             elif count == 0:
-                #ser.write(chr(int(1)).encode())
-                #time.sleep(0.5)
-                #ser.write(chr(int(2)).encode())
-                #time.sleep(0.7)
-                #ser.write(chr(int(0)).encode())
-                #print("turning left")
+                ser.write(chr(int(1)).encode())
+                time.sleep(0.5)
+                ser.write(chr(int(2)).encode())
+                time.sleep(0.6)
+                ser.write(chr(int(0)).encode())
+                print("turning left")
                 count = 1
-                #lookingForSign = 0
+                lookingForSign = 0
                 #ser.write(chr(int(120)).encode())
                 print("new lowering code")
 
