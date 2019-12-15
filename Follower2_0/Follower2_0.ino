@@ -329,7 +329,7 @@ static void met_actions(void)
     rasPi_send(OBALARM);
     while (rasPiState == FALSE)
     {
-      message = rasPi_recieve();
+      message = 3;
       if (message == SIGN) //Actions to do when sign is present
       {
         rasPiState = TRUE;
