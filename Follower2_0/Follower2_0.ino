@@ -348,6 +348,9 @@ static void met_actions(void)
       else if (message == DROP)
       {
         lift_control(DOWN);
+		M1B = 1 * motor_mode;
+		M2B = 1 * motor_mode;
+		_delay_ms(2000);
         rasPiState = TRUE;
       }
       else
