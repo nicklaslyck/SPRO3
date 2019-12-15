@@ -222,7 +222,7 @@ while True:
 
             try:
                 for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
-                    #print("a")
+                    #print("a")d
                     x1, y1, x2, y2 = line[0]
                     if (y1 > y2):
                         if (y1 > highLineY): # If new Y coordinate is higher than previously highest Y coordinate, dump previous line and replace its line coordinates with the newly found line.
