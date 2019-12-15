@@ -12,11 +12,13 @@ import imutils
 import RPi.GPIO as GPIO
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
-stateDelivering = True
+stateDelivering = False
 lowPower = 1
 lookingForSign = 0
 state = 0
-print("sleeping for 2 sec")
+packageSymbol = "triangle"
+print("starting python")
+print("sleeping for 2 sec...")
 
 w = 200
 vs = WebcamVideoStream(src=0).start()
@@ -54,7 +56,6 @@ upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
 lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
 upper_color_red = np.array([hb_r, hg_r, hr_r], dtype=np.uint8)
 
-print("blyat")
 max_slider = 40
 
 # current robot line coordinates is defined with null values.
@@ -62,8 +63,6 @@ hx1 = 0
 hx2 = 0
 hy1 = 0
 hy2 = 0
-
-packageSymbol = "triangle"
 # highLineY is a temporary value which remembers max Y value of previous line. A line can not be selected unless it has a higher Y value than this line.
 # This variable is slowly decreased in the code if the robot does not detect any valid lines, until it eventually reaches 0 and the robot will detect and blue line it sees.
 highLineY = 0
@@ -95,6 +94,7 @@ def cleanUp():
 
 def arduinoCallback1(channel):
     global lookingForSign
+    global lowPower
     print("interrupt triggered...")
     read = ser.read()
     if read == b'\x01':
@@ -107,98 +107,88 @@ def arduinoCallback1(channel):
         print("setting low-power mode enabled")
         lowPower = 1
 
-
-GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
-
- #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
-# While loop for main logic
-while True: 
-    # Image parameters / set-up for selecting colors and finding lines
-    image = vs.read()
-    image = imutils.resize(image, width=w)
+def seachLine():
+    #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
+    #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
     
-    
-    if lookingForSign == 0:
+    mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
+    #blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
+    #thresh1 = cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
-        #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
-        #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
-        
-        mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
-        #blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
-        #thresh1 = cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+    edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
 
-        edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
-        lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
-
-        try:
-            for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
-                #print("a")
-                x1, y1, x2, y2 = line[0]
-                if (y1 > y2):
-                    if (y1 > highLineY): # If new Y coordinate is higher than previously highest Y coordinate, dump previous line and replace its line coordinates with the newly found line.
-                        #print("")
-                        hx1 = x1
-                        tempX = x1
-                        hx2 = x2
-                        hy1 = y1
-                        hy2 = y2
-                        highLineY = y1
-                elif (y2 > y1):
-                    if (y2 > highLineY):
-                        #print("")
-                        hx1 = x1
-                        hx2 = x2
-                        tempX = x2
-                        hy1 = y1
-                        hy2 = y2
-                        highLineY = y2
-                else:
-                    #print("what")
-                    cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
-            if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
-                highLineY = highLineY - 5
-
-            if (hy2-hy1)/(hx2-hx1) > 9999:
-                slope = 9999
-            elif (hy2-hy1)/(hx2-hx1) < -9999:
-                slope = -9999
+    try:
+        for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
+            #print("a")
+            x1, y1, x2, y2 = line[0]
+            if (y1 > y2):
+                if (y1 > highLineY): # If new Y coordinate is higher than previously highest Y coordinate, dump previous line and replace its line coordinates with the newly found line.
+                    #print("")
+                    hx1 = x1
+                    tempX = x1
+                    hx2 = x2
+                    hy1 = y1
+                    hy2 = y2
+                    highLineY = y1
+            elif (y2 > y1):
+                if (y2 > highLineY):
+                    #print("")
+                    hx1 = x1
+                    hx2 = x2
+                    tempX = x2
+                    hy1 = y1
+                    hy2 = y2
+                    highLineY = y2
             else:
-                slope = (hy2-hy1)/(hx2-hx1)
-            
-            cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
-            # chr(254).encode()
-            #ser.write(chr(tempX*0.39).encode())
-            #print(chr(tempX*0.39).encode())
+                #print("what")
+                cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
+        if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
+            highLineY = highLineY - 5
+
+        if (hy2-hy1)/(hx2-hx1) > 9999:
+            slope = 9999
+        elif (hy2-hy1)/(hx2-hx1) < -9999:
+            slope = -9999
+        else:
+            slope = (hy2-hy1)/(hx2-hx1)
         
-        except:
-            #print("can't find line.")
-            if (highLineY > 10):
-                highLineY = highLineY - 5
-            slope = 9000
+        cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
+        # chr(254).encode()
+        #ser.write(chr(tempX*0.39).encode())
+        #print(chr(tempX*0.39).encode())
+    
+    except:
+        #print("can't find line.")
+        if (highLineY > 10):
+            highLineY = highLineY - 5
+        slope = 9000
 
-        #if (tempX > 40 and tempX < 60):
-        #   if (slope > -0.7 and slope < 0):
-        #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
-        #    elif (slope < 0.7 and slope > 0):
-        #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
-        #    else:
-        #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
-        #else:
-        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
-        
-        old_tempX = tempX
+    #if (tempX > 40 and tempX < 60):
+    #   if (slope > -0.7 and slope < 0):
+    #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
+    #    elif (slope < 0.7 and slope > 0):
+    #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
+    #    else:
+    #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+    #else:
+    sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+    
+    old_tempX = tempX
 
-        try:
-            cv2.imshow("Res1", image) # Displays image windows
-            cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
-            #cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
-        except:
-            print("can't show camera...")
+    try:
+        cv2.imshow("Res1", image) # Displays image windows
+        cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
+        #cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
+    except:
+        print("can't show camera...")
 
-    elif lookingForSign == 1 and stateDelivering:
+def lookForSign(readBoxSymbol=0):
+    if not readBoxSymbol:
         green = 0
         red = 0
         compare = 0
+        foundSign = 0
         for i in range(10):
             for l in range(2):
                 image = vs.read()
@@ -268,23 +258,294 @@ while True:
                 ser.write(chr(int(1)).encode()) 
                 ser.write(chr(int(126)).encode())
                 time.sleep(1)
+                foundSign = 1
             elif (compare / (red+1)) < 5:
                 print("turn left...")
                 ser.write(chr(int(1)).encode())
                 ser.write(chr(int(2)).encode())
                 time.sleep(1)
+                foundSign = 1
             else:
                 print("bad shapes...")
                 ser.write(chr(int(2)).encode())
+                foundSign = 0
         else:
             print("not enough, or too many shapes found.....")
             ser.write(chr(int(2)).encode())
-            ser.write(chr(int(4)).encode())
-
+            if not stateDelivering
+                ser.write(chr(int(4)).encode())              # to raise lift
+                stateDelivering = True
+            else:
+                ser.write(chr(int(5)).encode())              # to lower lift
+                stateDelivering = False
+            foundSign = 0
         ser.write(chr(int(0)).encode())
-        lookingForSign = 0
+        return foundSign
+    else:
+        print("read box symbol")
 
-    #elif not lookingForSignDelivering:
+GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
+
+ #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
+# While loop for main logic
+while True: 
+    # Image parameters / set-up for selecting colors and finding lines
+    if not stateDelivering:
+        if lookingForSign and shape == "":
+            #TURN CAMERA UP
+            compare = 0
+            foundSign = 0
+            triangles = 0
+            squares = 0
+
+            for i in range(10):
+                image = vs.read()
+                
+                mask1 = cv2.inRange(image, lower_color_red, upper_color_red)
+                resized = imutils.resize(mask1, width=300)
+                ratio = mask1.shape[0] / float(resized.shape[0])
+
+                # convert the resized image to grayscale, blur it slightly,
+                # and threshold it
+                #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+                gray = resized
+                blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+                thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+
+                # find contours in the thresholded image and initialize the
+                # shape detector
+                cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+                    cv2.CHAIN_APPROX_SIMPLE)
+                cnts = imutils.grab_contours(cnts)
+                sd = ShapeDetector()
+
+                try:
+                    # loop over the contours
+                    for c in cnts:
+                        # compute the center of the contour, then detect the name of the
+                        # shape using only the contour
+                        M = cv2.moments(c)
+                        cX = int((M["m10"] / M["m00"]) * ratio)
+                        cY = int((M["m01"] / M["m00"]) * ratio)
+                        shape = sd.detect(c)
+
+                        if shape=="triangle":
+                            triangles += 1
+                        elif shape =="rectangle" or shape == "square"
+                            squares += 1
+                        compare += 1
+
+                        # multiply the contour (x, y)-coordinates by the resize ratio,
+                        # then draw the contours and the name of the shape on the image
+                        c = c.astype("float")
+                        c *= ratio
+                        c = c.astype("int")
+                        #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
+                        #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                        #    0.5, (0, 0, 0), 2)
+                        
+                except:
+                    pass
+                cv2.imshow("thresh",thresh)
+                #cv2.imshow("Image1", image)
+                #cv2.imshow("mask1", mask1)
+                time.sleep(.200)
+            #analyse colors here..
+            print("shape info:")
+            print(compare)
+            print(squares)
+            print(triangles)
+
+            if compare < 15 and compare > 8:
+                if triangles > squares
+                    shape = "triangle"
+                    print("detected triangle!")
+                if triangles < squares:
+                    shape = "rectangle"
+                    print("detected rectangle!")
+                lookingForSign = 0
+                ser.write(chr(int(1)).encode()) # affirm we found a sign
+                # MOVE CAMERA DOWN
+            else:
+                print("didn't find sign")
+
+        elif lookingForSign and not shape == "":
+            ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
+            ser.write(chr(int(4)).encode()) # sends "4" to raise lift
+            stateDelivering = True
+    if stateDelivering:
+        if not lookingForSign:
+            #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
+            #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
+            
+            mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
+            #blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
+            #thresh1 = cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+
+            edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
+            lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
+
+            try:
+                for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
+                    #print("a")
+                    x1, y1, x2, y2 = line[0]
+                    if (y1 > y2):
+                        if (y1 > highLineY): # If new Y coordinate is higher than previously highest Y coordinate, dump previous line and replace its line coordinates with the newly found line.
+                            #print("")
+                            hx1 = x1
+                            tempX = x1
+                            hx2 = x2
+                            hy1 = y1
+                            hy2 = y2
+                            highLineY = y1
+                    elif (y2 > y1):
+                        if (y2 > highLineY):
+                            #print("")
+                            hx1 = x1
+                            hx2 = x2
+                            tempX = x2
+                            hy1 = y1
+                            hy2 = y2
+                            highLineY = y2
+                    else:
+                        #print("what")
+                        cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
+                if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
+                    highLineY = highLineY - 5
+
+                if (hy2-hy1)/(hx2-hx1) > 9999:
+                    slope = 9999
+                elif (hy2-hy1)/(hx2-hx1) < -9999:
+                    slope = -9999
+                else:
+                    slope = (hy2-hy1)/(hx2-hx1)
+                
+                cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
+                # chr(254).encode()
+                #ser.write(chr(tempX*0.39).encode())
+                #print(chr(tempX*0.39).encode())
+            
+            except:
+                #print("can't find line.")
+                if (highLineY > 10):
+                    highLineY = highLineY - 5
+                slope = 9000
+
+            #if (tempX > 40 and tempX < 60):
+            #   if (slope > -0.7 and slope < 0):
+            #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
+            #    elif (slope < 0.7 and slope > 0):
+            #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
+            #    else:
+            #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+            #else:
+            sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+            
+            old_tempX = tempX
+
+            try:
+                cv2.imshow("Res1", image) # Displays image windows
+                cv2.imshow("mask", mask) # Displays the masked window (black and white filter)
+                #cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
+            except:
+                print("can't show camera...")
+        if lookingForSign:
+            green = 0
+            red = 0
+            compare = 0
+            foundSign = 0
+            for i in range(10):
+                for l in range(2):
+                    image = vs.read()
+
+                    if l == 0:
+                        mask1 = cv2.inRange(image, lower_color_green, upper_color_green)
+                    elif l == 1:
+                        mask1 = cv2.inRange(image, lower_color_red, upper_color_red)
+                    resized = imutils.resize(mask1, width=300)
+                    ratio = mask1.shape[0] / float(resized.shape[0])
+
+                    # convert the resized image to grayscale, blur it slightly,
+                    # and threshold it
+                    #gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+                    gray = resized
+                    blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+                    thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
+
+                    # find contours in the thresholded image and initialize the
+                    # shape detector
+                    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+                        cv2.CHAIN_APPROX_SIMPLE)
+                    cnts = imutils.grab_contours(cnts)
+                    sd = ShapeDetector()
+
+                    try:
+                        # loop over the contours
+                        for c in cnts:
+                            # compute the center of the contour, then detect the name of the
+                            # shape using only the contour
+                            M = cv2.moments(c)
+                            cX = int((M["m10"] / M["m00"]) * ratio)
+                            cY = int((M["m01"] / M["m00"]) * ratio)
+                            shape = sd.detect(c)
+
+                            if (shape==packageSymbol and l==0):
+                                green = green + 1
+                            elif (shape==packageSymbol and l==1):
+                                red = red + 1
+
+                            compare = compare + 1
+
+                            # multiply the contour (x, y)-coordinates by the resize ratio,
+                            # then draw the contours and the name of the shape on the image
+                            c = c.astype("float")
+                            c *= ratio
+                            c = c.astype("int")
+                            #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
+                            #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                            #    0.5, (0, 0, 0), 2)
+                            
+                    except:
+                        pass
+                    cv2.imshow("thresh",thresh)
+                    #cv2.imshow("Image1", image)
+                    #cv2.imshow("mask1", mask1)
+                    time.sleep(.200)
+            #analyse colors here..
+            print("shape info:")
+            print(compare)
+            print(green)
+            print(red)
+
+            if compare > 30 and compare < 55:
+                if (compare / (green+1)) < 5:
+                    print("turning right...")
+                    ser.write(chr(int(1)).encode()) 
+                    ser.write(chr(int(126)).encode()) 
+                    time.sleep(1)
+                elif (compare / (red+1)) < 5:
+                    print("turn left...")
+                    ser.write(chr(int(1)).encode())
+                    ser.write(chr(int(2)).encode())
+                    time.sleep(1)
+                else:
+                    print("bad shapes...")
+                    ser.write(chr(int(2)).encode())
+                    ser.write(chr(int(2)).encode())
+                    ser.write(chr(int(2)).encode())
+                    ser.write(chr(int(3)).encode())
+                    stateDelivering = False
+
+            else:
+                print("not enough, or too many shapes found.....")
+                ser.write(chr(int(2)).encode())
+                ser.write(chr(int(3)).encode())
+                stateDelivering = False
+
+            ser.write(chr(int(0)).encode())
+            lookingForSign = 0
+
+
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
