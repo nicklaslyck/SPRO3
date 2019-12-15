@@ -272,7 +272,7 @@ def lookForSign(readBoxSymbol=0):
         else:
             print("not enough, or too many shapes found.....")
             ser.write(chr(int(2)).encode())
-            if not stateDelivering
+            if not stateDelivering:
                 ser.write(chr(int(4)).encode())              # to raise lift
                 stateDelivering = True
             else:
