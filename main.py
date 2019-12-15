@@ -16,7 +16,7 @@ stateDelivering = False
 lowPower = 0
 lookingForSign = 0
 state = 0
-packageSymbol = "triangle"
+packageSymbol = ""
 print("starting python")
 print("sleeping for 2 sec...")
 
