@@ -114,9 +114,9 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 count = 0
 #stateDelivering = False
 while True: 
-    print("stateDelivering: " + str(stateDelivering))
-    print("lookingForSign: " + str(lookingForSign))
-    print("count: " + str(count))
+    #print("stateDelivering: " + str(stateDelivering))
+    #print("lookingForSign: " + str(lookingForSign))
+    #print("count: " + str(count))
     image = vs.read()
     image = imutils.resize(image, width=w)
 
@@ -255,16 +255,6 @@ while True:
                 if (highLineY > 10):
                     highLineY = highLineY - 5
                 #slope = 9000
-
-            #if (tempX > 40 and tempX < 60):
-            #   if (slope > -0.7 and slope < 0):
-
-            #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
-            #    elif (slope < 0.7 and slope > 0):
-            #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
-            #    else:
-            #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
-            #else:
             sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             
             old_tempX = tempX
@@ -282,11 +272,11 @@ while True:
             time.sleep(1)
             ser.write(chr(int(2)).encode()) # raises lift
             time.sleep(10)
-            time.sleep(10)
+            time.sleep(5)
             stateDelivering = True
             lookingForSign = 0
 
-    if stateDelivering:
+    elif stateDelivering:
         if not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
             #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
@@ -367,7 +357,7 @@ while True:
                 time.sleep(12)
                 count = 0
                 lookingForSign = 0
-                stateDelivering = False
+                #stateDelivering = False
 
             elif count == 0:
                 ser.write(chr(int(1)).encode())
