@@ -99,7 +99,7 @@ def arduinoCallback1(channel):
     if read == b'\x01':
         lookingForSign = 1
         print("metal detected.")
-        ser.write(chr(int(3)).encode())####################################################################################################################################
+        #ser.write(chr(int(3)).encode())####################################################################################################################################
     elif read == b'\x02':                              # 13.8v battery
         print("powering off")
         sp.Popen("sudo poweroff")
