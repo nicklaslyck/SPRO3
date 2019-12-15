@@ -434,25 +434,29 @@ while True:
                     print("turning right...")
                     ser.write(chr(int(1)).encode()) 
                     ser.write(chr(int(126)).encode()) 
+                    lookingForSign = 0
                     time.sleep(1)
                 elif (compare / (red+1)) < 5:
                     print("turn left...")
                     ser.write(chr(int(1)).encode())
                     ser.write(chr(int(2)).encode())
+                    lookingForSign = 0
                     time.sleep(1)
                 else:
                     print("bad shapes...")
-                    ser.write(chr(int(2)).encode())
-                    ser.write(chr(int(2)).encode())
+                    print("lowering lift")
                     ser.write(chr(int(2)).encode())
                     ser.write(chr(int(3)).encode())
                     stateDelivering = False
+                    lookingForSign = 0
 
             else:
                 print("could not find enough shapes!")
+                print("lowering lift")
                 ser.write(chr(int(2)).encode())
                 ser.write(chr(int(3)).encode())
                 stateDelivering = False
+                lookingForSign = 0
 
             ser.write(chr(int(0)).encode())
             lookingForSign = 0
