@@ -1,4 +1,4 @@
-#include <usart.h>
+#include "usart.h"
 
 #include <stdio.h>
 #include <util/delay.h>
@@ -36,8 +36,8 @@ static void ob_detect(void)
 
 static void interrupts_setup(void)
 {
-    DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)
-    DDRD |= (1 << DDD4); //trigger pin as output
+  DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)
+  DDRD |= (1 << DDD4); //trigger pin as output
 	DDRC |= (1 << DDC4); //control pin 1 as output
 	DDRC |= (1 << DDC5); //control pin 2 as output
 	DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)
@@ -69,9 +69,9 @@ ISR (INT0_vect)
     {
         PORTC = ((PORTC & CONTROL_MASK) | (demoxControl << PINC4));
         _delay_us(10);
-        PORTD4 |= (1 << PIND4);
+        PORTD |= (1 << PIND4);
         _delay_us(10);
-        PORTD4 &= ~(1 << PIND4);
+        PORTD &= ~(1 << PIND4);
         TCNT1 = 0;
         _delay_ms(1);
     } 
