@@ -199,7 +199,9 @@ while True:
 
         elif lookingForSign and not packageSymbol == "":
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
+            time.sleep(0.1)
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
+            time.sleep(0.1)
             stateDelivering = True
             while True:
                 if cv2.waitKey(1) & 0xFF == ord('q'):
