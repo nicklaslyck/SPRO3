@@ -316,9 +316,8 @@ static void met_actions(void)
 {
   static bool rasPiState = false;
   static unsigned char message = 0;
-  if (metAlarm == TRUE && cleared == TRUE)
+  if (metAlarm == TRUE)
   //&& cleared)
-  
   {
     motor_stop();
     PORTC &= ~(1 << PORTC2);
