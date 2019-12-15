@@ -116,7 +116,7 @@ while True:
     image = imutils.resize(image, width=w)
     # Image parameters / set-up for selecting colors and finding lines
     if not stateDelivering:
-        if lookingForSign and shape == "":
+        if lookingForSign and packageSymbol == "":
             #TURN CAMERA UP
             compare = 0
             foundSign = 0
@@ -183,18 +183,18 @@ while True:
 
             if compare < 15 and compare > 8:
                 if triangles > squares:
-                    shape = "triangle"
+                    packageSymbol = "triangle"
                     print("detected triangle!")
                 if triangles < squares:
-                    shape = "rectangle"
+                    packageSymbol = "rectangle"
                     print("detected rectangle!")
                 lookingForSign = 0
                 ser.write(chr(int(1)).encode()) # affirm we found a sign
                 # MOVE CAMERA DOWN
             else:
-                print("didn't find sign")
+                print("didn't find sign, checking again...")
 
-        elif lookingForSign and not shape == "":
+        elif lookingForSign and not packageSymbol == "":
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
             stateDelivering = True
