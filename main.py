@@ -205,12 +205,10 @@ while True:
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
             time.sleep(0.1)
             stateDelivering = True
-            #while True:
-            #    if cv2.waitKey(1) & 0xFF == ord('q'):
-            #        ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
-            #        break # Stops program if button "q" is pressed.
-            #    print("send 4")
-            #    print(packageSymbol)
+            while not ser.read() == b'\x01':
+                print("waiting for 1")
+            print("got a 1")
+
         elif not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
             #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
@@ -250,12 +248,6 @@ while True:
                 if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
                     highLineY = highLineY - 5
 
-                if (hy2-hy1)/(hx2-hx1) > 9999:
-                    slope = 9999
-                elif (hy2-hy1)/(hx2-hx1) < -9999:
-                    slope = -9999
-                else:
-                    slope = (hy2-hy1)/(hx2-hx1)
                 
                 cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
                 # chr(254).encode()
