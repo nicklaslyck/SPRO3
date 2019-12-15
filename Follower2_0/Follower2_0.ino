@@ -391,7 +391,7 @@ static void pin_setup(void)
 	DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)
 
 	PORTD &= ~(1 << PORTD4); //trigger pin to 0
-	PORTC &= ~(1 << PORTC3); //control pin 1 to 0
+	//PORTC &= ~(1 << PORTC3); //control pin 1 to 0
 	PORTC &= ~(1 << PORTC4); //control pin 2 to 0
 	PORTC &= ~(1 << PORTC5); //control pin 3 to 0
 
@@ -419,10 +419,10 @@ static void pin_setup(void)
 	//----------------Pi communication---------------//
 	DDRC |= (1 << DDC2); //Message ready as output
 	//PORTC &= ~(1 << PORTC2); //Message ready to 0
-        PORTC |= (1 << PORTC2);
+    PORTC |= (1 << PORTC2);
         
-        //-----------------Inductor Sensor---------------//
-        DDRC &= ~(1 << DDC3); //echo pin as input (PCINT11 pin)
+    //-----------------Inductor Sensor---------------//
+    DDRC &= ~(1 << DDC3); //echo pin as input (PCINT11 pin)
         
 }
 
