@@ -200,9 +200,6 @@ while True:
         elif lookingForSign and not packageSymbol == "":
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
-            while True:
-                print("stuck")
-                print(packageSymbol)
             stateDelivering = True
         elif not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
