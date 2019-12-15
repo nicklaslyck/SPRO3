@@ -360,17 +360,21 @@ while True:
             except:
                 print("can't show camera...")
         if lookingForSign:
-            if count == 0:
-                ser.write(chr(int(1)).encode())
-                ser.write(chr(int(2)).encode())
-                time.sleep(0.5)
-                print("turning left")
-                count += 1
             if count == 1:
                 ser.write(chr(int(2)).encode())
                 ser.write(chr(int(3)).encode())
                 time.sleep(12)
                 print("lowering lift")
+                count = 0
+                lookingForSign = 0
+                stateDelivering = False
+            elif count == 0:
+                ser.write(chr(int(1)).encode())
+                ser.write(chr(int(2)).encode())
+                time.sleep(0.5)
+                print("turning left")
+                count += 1
+                lookingForSign = 0
 
 
 
