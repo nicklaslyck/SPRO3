@@ -91,6 +91,7 @@ def cleanUp():
     GPIO.cleanup()
 
 def arduinoCallback1(channel):
+    time.sleep(1)
     global lookingForSign
     global lowPower
     print("interrupt triggered...")
@@ -197,17 +198,6 @@ while True:
             else:
                 print("didn't find sign, checking again...")
 
-        elif lookingForSign and not packageSymbol == "":
-            print("raising lift")
-            time.sleep(1)
-            ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
-            time.sleep(0.1)
-            ser.write(chr(int(4)).encode()) # sends "4" to raise lift
-            time.sleep(0.1)
-            stateDelivering = True
-            while not ser.read() == b'\x01':
-                print("waiting for 1")
-            print("got a 1")
 
         elif not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
@@ -278,6 +268,17 @@ while True:
                 #cv2.imshow("thresh1", thresh1) # Displays the masked window (black and white filter)
             except:
                 print("can't show camera...")
+
+
+        elif lookingForSign and not packageSymbol == "":
+            print("raising lift")
+            time.sleep(1)
+            ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
+            time.sleep(0.1)
+            ser.write(chr(int(4)).encode()) # sends "4" to raise lift
+            time.sleep(0.1)
+            stateDelivering = True
+
     if stateDelivering:
         if not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
