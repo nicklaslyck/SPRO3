@@ -111,7 +111,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 count = 0
-ser.write(chr(int(130)).encode())
+ser.write(chr(int(200)).encode())
 #stateDelivering = True
 while True: 
     print("stateDelivering: " + str(stateDelivering))
@@ -280,9 +280,7 @@ while True:
         elif lookingForSign and not packageSymbol == "":
             print("raising lift!")
             time.sleep(1)
-            ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
-            time.sleep(0.1)
-            ser.write(chr(int(4)).encode()) # sends "4" to raise lift
+            ser.write(chr(int(2)).encode()) # raises lift
             time.sleep(0.1)
             time.sleep(10)
             stateDelivering = True
@@ -369,14 +367,16 @@ while True:
                 stateDelivering = False
 
             elif count == 0:
-                ser.write(chr(int(1)).encode())
-                time.sleep(0.5)
-                ser.write(chr(int(2)).encode())
-                time.sleep(0.7)
-                ser.write(chr(int(0)).encode())
-                print("turning left")
-                count = 1
-                lookingForSign = 0
+                #ser.write(chr(int(1)).encode())
+                #time.sleep(0.5)
+                #ser.write(chr(int(2)).encode())
+                #time.sleep(0.7)
+                #ser.write(chr(int(0)).encode())
+                #print("turning left")
+                #count = 1
+                #lookingForSign = 0
+                ser.write(chr(int(3)).encode())
+                print("new lowering code")
 
 
 
