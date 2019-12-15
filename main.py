@@ -372,6 +372,7 @@ while True:
                 ser.write(chr(int(1)).encode())
                 ser.write(chr(int(2)).encode())
                 time.sleep(0.5)
+                ser.write(chr(int(0)).encode())
                 print("turning left")
                 count += 1
                 lookingForSign = 0
