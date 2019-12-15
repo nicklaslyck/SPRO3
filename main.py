@@ -99,6 +99,7 @@ def arduinoCallback1(channel):
     if read == b'\x01':
         lookingForSign = 1
         print("metal detected.")
+        ser.write(chr(int(3)).encode())####################################################################################################################################
     elif read == b'\x02':                              # 13.8v battery
         print("powering off")
         sp.Popen("sudo poweroff")
@@ -359,7 +360,7 @@ while True:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                #ser.write(chr(int(4)).encode())
+                ser.write(chr(int(3)).encode())
                 print("lowering lift and sleeping for 12s")
                 time.sleep(12)
                 count = 0
