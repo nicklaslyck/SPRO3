@@ -373,9 +373,9 @@ while True:
                 #time.sleep(0.7)
                 #ser.write(chr(int(0)).encode())
                 #print("turning left")
-                #count = 1
+                count = 1
                 #lookingForSign = 0
-                ser.write(chr(int(3)).encode())
+                #ser.write(chr(int(120)).encode())
                 print("new lowering code")
 
 
