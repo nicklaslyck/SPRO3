@@ -281,7 +281,7 @@ while True:
         elif lookingForSign and not packageSymbol == "":
             print("raising lift!")
             time.sleep(1)
-            ser.write(chr(int(2)).encode()) # raises lift
+            ser.write(chr(int(55)).encode()) # raises lift
             time.sleep(10)
             time.sleep(10)
             stateDelivering = True
@@ -360,7 +360,8 @@ while True:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                ser.write(chr(int(3)).encode())
+                ser.write(chr(int(2)).encode())
+                time.sleep(3)
                 print("lowering lift and sleeping for 12s")
                 #time.sleep(12)
                 count = 0
