@@ -330,13 +330,13 @@ static void met_actions(void)
     while (rasPiState == FALSE)
     {
       message = rasPi_recieve();
-      if (message == SIGN) //Actions to do when sign is present
+      if (message == 1) //Actions to do when sign is present
       {
         rasPiState = TRUE;
         //motor_mode = SLOW;
         //obIgnore = true;
       }
-      else if (message == TAKE) //Actions to do when no sign is present
+      else if (message == 2) //Actions to do when no sign is present
       {
         lift_control(UP);
 		M1F = 1 * motor_mode;
@@ -345,7 +345,7 @@ static void met_actions(void)
 		motor_stop();
         rasPiState = TRUE;
 	  }
-      else if (message == DROP)
+      else if (message == 3)
       {
         lift_control(DOWN);
 		M1B = 1 * motor_mode;
@@ -369,7 +369,7 @@ static void met_actions(void)
 
 unsigned char rasPi_recieve(void) 
 {
-	while ((!(UCSR0A & (1 << RXC0))) && UDR0 != 3);
+	while (!(UCSR0A & (1 << RXC0)));
 	return UDR0;
 }
 
