@@ -314,7 +314,7 @@ static void handleBattery(void)
 
 static void met_actions(void)
 {
-  static bool rasPiState = false;
+  static dir rasPiState = FALSE;
   static unsigned char message = 0;
   if (metAlarm == TRUE)
   //&& cleared == TRUE)
@@ -327,12 +327,12 @@ static void met_actions(void)
     _delay_ms(10);
     PORTC |= (1 << PORTC2);
     rasPi_send(OBALARM);
-    while (rasPiState == false)
+    while (rasPiState == FALSE)
     {
       message = rasPi_recieve();
       if (message == SIGN) //Actions to do when sign is present
       {
-        rasPiState = true;
+        rasPiState = TRUE;
         //motor_mode = SLOW;
         //obIgnore = true;
       }
@@ -343,16 +343,16 @@ static void met_actions(void)
 		M2F = 1 * motor_mode;
 		_delay_ms(500);
 		motor_stop();
-        rasPiState = true;
+        rasPiState = TRUE;
 	  }
       else if (message == DROP)
       {
         lift_control(DOWN);
-        rasPiState = true;
+        rasPiState = TRUE;
       }
       else
       {
-            //left empty on purpose to account for all empty cases
+            rasPiState = FALSE;
       }
     }
     //handleBattery();
