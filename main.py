@@ -450,7 +450,7 @@ while True:
                     stateDelivering = False
 
             else:
-                print("not enough, or too many shapes found.....")
+                print("could not find enough shapes!")
                 ser.write(chr(int(2)).encode())
                 ser.write(chr(int(3)).encode())
                 stateDelivering = False
