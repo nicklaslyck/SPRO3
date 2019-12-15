@@ -118,7 +118,7 @@ while True:
     image = imutils.resize(image, width=w)
 
     packageSymbol = "triangle"
-    # Image parameters / set-up for selecting colors and finding lines
+    # Image parameters / set-up for selecting colors and finding liness
     if not stateDelivering:
         if lookingForSign and packageSymbol == "":
             #TURN CAMERA UP
