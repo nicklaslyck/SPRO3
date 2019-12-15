@@ -362,7 +362,7 @@ while True:
             if count == 1:
                 ser.write(chr(int(3)).encode())
                 print("lowering lift and sleeping for 12s")
-                time.sleep(12)
+                #time.sleep(12)
                 count = 0
                 lookingForSign = 0
                 stateDelivering = False
