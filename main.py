@@ -417,7 +417,7 @@ while True:
                         print(e)
 
                     cv2.imshow("thresh",thresh)
-                    #cv2.imshow("Image1", image)
+                    #cv2.imshow("Image1", image).
                     #cv2.imshow("mask1", mask1)
                     time.sleep(.200)
             #analyse colors here..
