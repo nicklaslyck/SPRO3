@@ -360,7 +360,7 @@ while True:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                ser.write(chr(int(120)).encode())
+                ser.write(chr(int(126)).encode())
                 time.sleep(1)
                 print("lowering lift and sleeping for 12s")
                 #time.sleep(12)
