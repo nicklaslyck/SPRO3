@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = False
-lowPower = 1
+lowPower = 0
 lookingForSign = 0
 state = 0
 packageSymbol = "triangle"
@@ -80,9 +80,9 @@ time.sleep(2)
 
 def sendLineInfo(newX,oldX,width):
     try:
-        #if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
-        ser.write(chr(int(newX*(126/width))+1).encode()) 
-        print("writing serial value: " + str(int(newX*(126/width))+1))
+        if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
+            ser.write(chr(int(newX*(126/width))+1).encode()) 
+            print("writing serial value: " + str(int(newX*(126/width))+1))
 
     except:
         print("No new line info. No serial written.")
@@ -143,38 +143,39 @@ while True:
                     cv2.CHAIN_APPROX_SIMPLE)
                 cnts = imutils.grab_contours(cnts)
                 sd = ShapeDetector()
+                for l in range(10):
+                    try:
+                        # loop over the contours
+                        for c in cnts:
+                            # compute the center of the contour, then detect the name of the
+                            # shape using only the contour
+                            M = cv2.moments(c)
+                            cX = int((M["m10"] / M["m00"]) * ratio)
+                            cY = int((M["m01"] / M["m00"]) * ratio)
+                            shape = sd.detect(c)
 
-                try:
-                    # loop over the contours
-                    for c in cnts:
-                        # compute the center of the contour, then detect the name of the
-                        # shape using only the contour
-                        M = cv2.moments(c)
-                        cX = int((M["m10"] / M["m00"]) * ratio)
-                        cY = int((M["m01"] / M["m00"]) * ratio)
-                        shape = sd.detect(c)
+                            if shape=="triangle":
+                                triangles += 1
+                            elif shape =="rectangle" or shape == "square":
+                                squares += 1
+                            compare += 1
 
-                        if shape=="triangle":
-                            triangles += 1
-                        elif shape =="rectangle" or shape == "square":
-                            squares += 1
-                        compare += 1
+                            # multiply the contour (x, y)-coordinates by the resize ratio,
+                            # then draw the contours and the name of the shape on the image
+                            c = c.astype("float")
+                            c *= ratio
+                            c = c.astype("int")
+                            #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
+                            #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                            #    0.5, (0, 0, 0), 2)
 
-                        # multiply the contour (x, y)-coordinates by the resize ratio,
-                        # then draw the contours and the name of the shape on the image
-                        c = c.astype("float")
-                        c *= ratio
-                        c = c.astype("int")
-                        #cv2.drawContours(image, [c], -1, (0, 0, 255), 2)
-                        #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                        #    0.5, (0, 0, 0), 2)
-                        
-                except:
-                    pass
-                cv2.imshow("thresh",thresh)
-                #cv2.imshow("Image1", image)
-                #cv2.imshow("mask1", mask1)
-                time.sleep(.200)
+                            
+                    except:
+                        pass
+                    cv2.imshow("thresh",thresh)
+                    #cv2.imshow("Image1", image)
+                    #cv2.imshow("mask1", mask1)
+                    time.sleep(.200)
             #analyse colors here..
             print("shape info:")
             print(compare)
@@ -197,6 +198,9 @@ while True:
         elif lookingForSign and not packageSymbol == "":
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
+            while True:
+                print("stuck")
+                print(packageSymbol)
             stateDelivering = True
         elif not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
