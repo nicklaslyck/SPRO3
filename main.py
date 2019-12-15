@@ -116,7 +116,6 @@ while True:
     packageSymbol = "triangle"
     # Image parameters / set-up for selecting colors and finding lines
     if not stateDelivering:
-    print()
         if lookingForSign and packageSymbol == "":
             #TURN CAMERA UP
             compare = 0
