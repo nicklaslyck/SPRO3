@@ -279,6 +279,7 @@ while True:
             time.sleep(0.1)
             time.sleep(10)
             stateDelivering = True
+            lookingForSign = 0
 
     if stateDelivering:
         if not lookingForSign:
