@@ -91,11 +91,11 @@ def cleanUp():
     GPIO.cleanup()
 
 def arduinoCallback1(channel):
-    time.sleep(1)
     global lookingForSign
     global lowPower
     print("interrupt triggered...")
     read = ser.read()
+    time.sleep(1)
     if read == b'\x01':
         lookingForSign = 1
         print("metal detected.")
@@ -271,12 +271,13 @@ while True:
 
 
         elif lookingForSign and not packageSymbol == "":
-            print("raising lift")
+            print("raising lift!")
             time.sleep(1)
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
             time.sleep(0.1)
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
             time.sleep(0.1)
+            time.sleep(10)
             stateDelivering = True
 
     if stateDelivering:
