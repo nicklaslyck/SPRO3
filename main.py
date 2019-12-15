@@ -361,7 +361,7 @@ while True:
             time.sleep(1)
             if count == 1:
                 ser.write(chr(int(126)).encode())
-                time.sleep(1)
+                time.sleep(3)
                 print("lowering lift and sleeping for 12s")
                 #time.sleep(12)
                 count = 0
