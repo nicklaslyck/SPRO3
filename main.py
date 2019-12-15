@@ -110,6 +110,8 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
+
+stateDelivering = True
 while True: 
     image = vs.read()
     image = imutils.resize(image, width=w)
