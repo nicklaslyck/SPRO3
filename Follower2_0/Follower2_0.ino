@@ -341,7 +341,11 @@ static void met_actions(void)
           if (message == TAKE)
           {
             lift_control(UP);
-			rasPi_send(BOXLOADED);
+			M1F = 1 * motor_mode;
+			M2F = 1 * motor_mode;
+			_delay_ms(500);
+			motor_stop();
+			//rasPi_send(BOXLOADED);
             rasPiState = true;
           }
           else if (message == DROP)
