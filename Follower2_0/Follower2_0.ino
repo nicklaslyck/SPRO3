@@ -435,7 +435,7 @@ static void interrupts_setup(void)
 
 	//>-- Timer setup for 1 micro second
 	TCCR1B |= (1 << WGM12); //Set the Timer Mode to CTC
-        TCCR1B |= (1 << CS11); //Set prescaler to 8 and start the timer
+    TCCR1B |= (1 << CS11); //Set prescaler to 8 and start the timer
 	//OCR1A = 1; //Set the value that you want to count to
 	///> 1 for 1 us, 19 for 10 us, 199 for 100 us
 	//TIMSK1 |= (1 << OCIE1A); //Set the ISR COMPA vect
