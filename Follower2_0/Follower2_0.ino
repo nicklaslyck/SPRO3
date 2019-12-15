@@ -37,7 +37,7 @@ static uint8_t motor_mode = FAST;
 #define VOLTAGEREFERENCE 4800
 #define RESOLUTION 1024.0
 #define MINVOLTAGE 3600
-#define SMALLVOLTAGE 3600
+#define SMALLVOLTAGE 3650
 
 //echo sensor variabels
 #define BAUDRATE 9600
@@ -101,7 +101,8 @@ int main(void)
 {
 	arduino_init();
 	motor_stop();
-        lift_control(DOWN);
+    lift_control(DOWN);
+	_delay_ms(1500);
 	while (1) 
 	{	
           handleBattery();
