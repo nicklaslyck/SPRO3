@@ -13,60 +13,14 @@ import RPi.GPIO as GPIO
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = True
-
-print("sleeping for 2 sec")
-time.sleep(2)
-
-def sendLineInfo(newX,oldX,width):
-    try:
-        #if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
-        ser.write(chr(int(newX*(126/width))+1).encode()) 
-        print("writing serial value: " + str(int(newX*(126/width))+1))
-
-    except:
-        print("No new line info. No serial written.")
-
-# Function to display camera window on GUI. Default input is True, run False to disable.
-
-
-
-# Stops thread loading images and destroys camera windows.
-def cleanUp():
-    cv2.destroyAllWindows()
-    vs.stop()
-    GPIO.cleanup()
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-
-GPIO.setup(18, GPIO.OUT)
-servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
-servoPWM.start(int(50/100)+1)
-
-#servoPosition = 50 # position in %
-#servoPWM.ChangeDutyCycle(int(servoPosition/100)+1)
-
-
-
+lowPower = 1
+lookingForSign = 0
 state = 0
+print("sleeping for 2 sec")
 
-def arduinoCallback1(channel):
-    global state
-    print("interrupt triggered...")
-    read = ser.read()
-    if read == b'\x01':
-        state = 1
-        print("recieved 1, looking for sign...")
-    else:
-        print("serial read was not 1.")
-
-
-
-GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
 w = 200
 vs = WebcamVideoStream(src=0).start()
  
-
 # Defines lower color values for color filters
 lr_b = 0 #0
 lg_b = 130 #40
@@ -115,7 +69,48 @@ packageSymbol = "triangle"
 highLineY = 0
 tempX = 320
 old_tempX = 320
- #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+
+GPIO.setup(18, GPIO.OUT)
+servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
+servoPWM.start(int(50/100)+1)
+
+time.sleep(2)
+
+def sendLineInfo(newX,oldX,width):
+    try:
+        #if (newX != oldX): # if tempX has changed from last instance, new line has been found / line has moved
+        ser.write(chr(int(newX*(126/width))+1).encode()) 
+        print("writing serial value: " + str(int(newX*(126/width))+1))
+
+    except:
+        print("No new line info. No serial written.")
+
+def cleanUp():
+    cv2.destroyAllWindows()
+    vs.stop()
+    GPIO.cleanup()
+
+def arduinoCallback1(channel):
+    global lookingForSign
+    print("interrupt triggered...")
+    read = ser.read()
+    if read == b'\x01':
+        lookingForSign = 1
+        print("recieved 1, looking for sign...")
+    if else read == b'\x02':                              # 13.8v battery
+        print("powering off")
+        sp.Popen("sudo poweroff")
+    if else read == b'\x03':                              # 14v battery
+        print("setting low-power mode enabled")
+        lowPower = 1
+
+
+GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
+
+ #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 while True: 
     # Image parameters / set-up for selecting colors and finding lines
@@ -123,7 +118,7 @@ while True:
     image = imutils.resize(image, width=w)
     
     
-    if state == 0:
+    if lookingForSign == 0:
 
         #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
         #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
@@ -134,7 +129,6 @@ while True:
 
         edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
         lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
-
 
         try:
             for index, line in enumerate(lines): # This for-loop finds the line with the highest (lowest on screen) Y-coordinate. This will become the line the robot will follow as it's the line closest to the robot.
@@ -170,7 +164,6 @@ while True:
                 slope = -9999
             else:
                 slope = (hy2-hy1)/(hx2-hx1)
-
             
             cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
             # chr(254).encode()
@@ -202,7 +195,7 @@ while True:
         except:
             print("can't show camera...")
 
-    elif state == 1 and stateDelivering:
+    elif lookingForSign == 1 and stateDelivering:
         green = 0
         red = 0
         compare = 0
@@ -245,7 +238,6 @@ while True:
                             green = green + 1
                         elif (shape==packageSymbol and l==1):
                             red = red + 1
-
 
                         compare = compare + 1
 
@@ -290,10 +282,9 @@ while True:
             ser.write(chr(int(4)).encode())
 
         ser.write(chr(int(0)).encode())
-        state = 0
+        lookingForSign = 0
 
-    #elif not stateDelivering:
-
+    #elif not lookingForSignDelivering:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
