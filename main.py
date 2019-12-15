@@ -184,7 +184,7 @@ while True:
             print(squares)
             print(triangles)
 
-            if compare < 15 and compare > 8:
+            if compare < 20 and compare > 6:
                 if triangles > squares:
                     packageSymbol = "triangle"
                     print("detected triangle!")
