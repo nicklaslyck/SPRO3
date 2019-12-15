@@ -101,7 +101,7 @@ int main(void)
 {
 	arduino_init();
 	motor_stop();
-    lift_control(DOWN);
+    lift_control(UP);
 	_delay_ms(1500);
 	while (1) 
 	{	
@@ -338,7 +338,7 @@ static void met_actions(void)
       }
       else if (message == TAKE) //Actions to do when no sign is present
       {
-        lift_control(UP);
+        lift_control(DOWN);
 		M1F = 1 * motor_mode;
 		M2F = 1 * motor_mode;
 		_delay_ms(500);
