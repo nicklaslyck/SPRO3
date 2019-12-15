@@ -72,7 +72,7 @@ GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency
-servoPWM.start(int(50/100)+1)
+servoPWM.start(92.5)
 
 time.sleep(2)
 
