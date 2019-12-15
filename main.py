@@ -331,7 +331,7 @@ while True:
 
                         if shape=="triangle":
                             triangles += 1
-                        elif shape =="rectangle" or shape == "square"
+                        elif shape =="rectangle" or shape == "square":
                             squares += 1
                         compare += 1
 
