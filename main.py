@@ -364,6 +364,7 @@ while True:
             time.sleep(1)
             if count == 1:
                 ser.write(chr(int(2)).encode())
+                time.sleep(0.5)
                 ser.write(chr(int(3)).encode())
                 time.sleep(12)
                 print("lowering lift")
@@ -372,6 +373,7 @@ while True:
                 stateDelivering = False
             elif count == 0:
                 ser.write(chr(int(1)).encode())
+                time.sleep(0.5)
                 ser.write(chr(int(2)).encode())
                 time.sleep(0.8)
                 ser.write(chr(int(0)).encode())
