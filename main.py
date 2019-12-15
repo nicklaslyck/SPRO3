@@ -113,7 +113,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 # While loop for main logic
 count = 0
 ser.write(chr(int(200)).encode())
-#stateDelivering = True
+stateDelivering = True
 while True: 
     print("stateDelivering: " + str(stateDelivering))
     print("lookingForSign: " + str(lookingForSign))
@@ -362,22 +362,22 @@ while True:
             if count == 0:
                 ser.write(chr(int(3)).encode())
                 print("lowering lift and sleeping for 12s")
-                #time.sleep(12)
+                time.sleep(12)
                 count = 0
                 lookingForSign = 0
                 stateDelivering = False
 
-            elif count == 0:
-                ser.write(chr(int(1)).encode())
-                time.sleep(0.5)
-                ser.write(chr(int(2)).encode())
-                time.sleep(0.6)
-                ser.write(chr(int(0)).encode())
-                print("turning left")
-                count = 1
-                lookingForSign = 0
-                #ser.write(chr(int(120)).encode())
-                print("new lowering code")
+            #elif count == 0:
+            #    ser.write(chr(int(1)).encode())
+            #    time.sleep(0.5)
+            #    ser.write(chr(int(2)).encode())
+            #    time.sleep(0.6)
+            #    ser.write(chr(int(0)).encode())
+            #    print("turning left")
+            #    count = 1
+            #    lookingForSign = 0
+            #    #ser.write(chr(int(120)).encode())
+            #    print("new lowering code")
 
 
 
