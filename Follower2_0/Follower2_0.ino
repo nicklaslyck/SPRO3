@@ -369,7 +369,7 @@ static void met_actions(void)
 
 unsigned char rasPi_recieve(void) 
 {
-	while (!(UCSR0A & (1 << RXC0)));
+	while ((!(UCSR0A & (1 << RXC0))) && UDR0 != 3);
 	return UDR0;
 }
 
