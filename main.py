@@ -201,6 +201,11 @@ while True:
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
             stateDelivering = True
+            while True:
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
+                    break # Stops program if button "q" is pressed.
+                print("stuckbitch")
         elif not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
             #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
