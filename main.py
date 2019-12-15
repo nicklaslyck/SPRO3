@@ -360,7 +360,7 @@ while True:
             except:
                 print("can't show camera...")
         if lookingForSign:
-            ser.write(chr(int(0)).encode())
+            #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
                 ser.write(chr(int(2)).encode())
