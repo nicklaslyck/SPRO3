@@ -112,6 +112,8 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 while True: 
+    image = vs.read()
+    image = imutils.resize(image, width=w)
     # Image parameters / set-up for selecting colors and finding lines
     if not stateDelivering:
         if lookingForSign and shape == "":
