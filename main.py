@@ -114,6 +114,9 @@ count = 0
 ser.write(chr(int(-120)).encode())
 #stateDelivering = True
 while True: 
+    print("stateDelivering: " + str(stateDelivering))
+    print("lookingForSign: " + str(lookingForSign))
+    print("count: " + str(count))
     image = vs.read()
     image = imutils.resize(image, width=w)
 
