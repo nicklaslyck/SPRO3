@@ -37,7 +37,7 @@ static void ob_detect(void)
 static void interrupts_setup(void)
 {
   DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)
-  DDRD |= (1 << DDD4); //trigger pin as output
+    DDRD |= (1 << DDD4); //trigger pin as output
 	DDRC |= (1 << DDC4); //control pin 1 as output
 	DDRC |= (1 << DDC5); //control pin 2 as output
 	DDRD &= ~(1 << DDD2); //echo pin as input (INT0 pin)

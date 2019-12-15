@@ -56,14 +56,14 @@ static uint8_t motor_mode = FAST;
 	//meddage recieve
 #define MESSAGEOK 246
 #define SIGN 1
-#define NOSIGN 2
-#define STORAGE 253
+#define TAKE 2
+#define DROP 3
 #define GOTOSLOW 252
 #define GOTOFAST 251
 #define LIFTUP 600 //@TODO set the proper value
 #define STOP 0
-#define TAKE 4
-#define DROP 3
+//#define TAKE 4
+//#define DROP 3
 
 typedef enum
 {
@@ -334,35 +334,23 @@ static void met_actions(void)
         //motor_mode = SLOW;
         //obIgnore = true;
       }
-      else if (message == NOSIGN) //Actions to do when no sign is present
+      else if (message == TAKE) //Actions to do when no sign is present
       {
-        while (rasPiState == false)
-        {
-          message = rasPi_recieve();
-          if (message == TAKE)
-          {
-            lift_control(UP);
-            rasPiState = true;
-          }
-          else if (message == DROP)
-          {
-            lift_control(DOWN);
-            rasPiState = true;
-          }
-          else
-          {
-            //left empty on purpose to account for all empty cases
-          }
-        }
+        lift_control(UP);
+        rasPiState = true;
+	  }
+      else if (message == DROP)
+      {
+        lift_control(DOWN);
+        rasPiState = true;
       }
       else
       {
-        //left empty on purpose to account for all empty cases
+            //left empty on purpose to account for all empty cases
       }
-      //handleBattery();
-      //ob_check();
     }
-    
+    //handleBattery();
+    //ob_check();
     //lift_control(UP);
     //cleared = FALSE;
     metAlarm = FALSE;
