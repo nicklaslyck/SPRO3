@@ -111,6 +111,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 count = 0
+ser.write(chr(int(-120)).encode())
 #stateDelivering = True
 while True: 
     image = vs.read()
@@ -250,10 +251,11 @@ while True:
                 #print("can't find line.")
                 if (highLineY > 10):
                     highLineY = highLineY - 5
-                slope = 9000
+                #slope = 9000
 
             #if (tempX > 40 and tempX < 60):
             #   if (slope > -0.7 and slope < 0):
+
             #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
             #    elif (slope < 0.7 and slope > 0):
             #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
@@ -322,13 +324,6 @@ while True:
                         cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5)
                 if (highLineY > 10): # This slowly reduces the previously highest Y coordinate. This mechanism is neccesary as the robot would otherwise quickly select a new totally different line, if it for a moment can't see it's previous line.
                     highLineY = highLineY - 5
-
-                if (hy2-hy1)/(hx2-hx1) > 9999:
-                    slope = 9999
-                elif (hy2-hy1)/(hx2-hx1) < -9999:
-                    slope = -9999
-                else:
-                    slope = (hy2-hy1)/(hx2-hx1)
                 
                 cv2.line(image, (hx1, hy1), (hx2, hy2), (255, 0, 255), 5) # Draws the new line on the "img" windows.
                 # chr(254).encode()
@@ -339,7 +334,7 @@ while True:
                 #print("can't find line.")
                 if (highLineY > 10):
                     highLineY = highLineY - 5
-                slope = 9000
+                #slope = 9000
 
             #if (tempX > 40 and tempX < 60):
             #   if (slope > -0.7 and slope < 0):
@@ -363,11 +358,9 @@ while True:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                ser.write(chr(int(2)).encode())
-                time.sleep(0.5)
                 ser.write(chr(int(3)).encode())
+                print("lowering lift and sleeping for 12s")
                 time.sleep(12)
-                print("lowering lift")
                 count = 0
                 lookingForSign = 0
                 stateDelivering = False
