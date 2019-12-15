@@ -101,7 +101,7 @@ int main(void)
 {
 	arduino_init();
 	motor_stop();
-    lift_control(DOWN);
+    lift_control(UP);
 	_delay_ms(1500);
 	while (1) 
 	{	
