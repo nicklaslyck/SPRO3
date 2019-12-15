@@ -359,7 +359,7 @@ while True:
         if lookingForSign:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
-            if count == 1:
+            if count == 0:
                 ser.write(chr(int(3)).encode())
                 print("lowering lift and sleeping for 12s")
                 time.sleep(12)
@@ -367,17 +367,17 @@ while True:
                 lookingForSign = 0
                 stateDelivering = False
 
-            elif count == 0:
-                ser.write(chr(int(1)).encode())
-                time.sleep(0.5)
-                ser.write(chr(int(2)).encode())
-                time.sleep(0.6)
-                ser.write(chr(int(0)).encode())
-                print("turning left")
-                count = 1
-                lookingForSign = 0
-                #ser.write(chr(int(120)).encode())
-                print("new lowering code")
+            #elif count == 0:
+            #    ser.write(chr(int(1)).encode())
+            #    time.sleep(0.5)
+            #    ser.write(chr(int(2)).encode())
+            #    time.sleep(0.6)
+            #    ser.write(chr(int(0)).encode())
+            #    print("turning left")
+            #    count = 1
+            #    lookingForSign = 0
+            #    #ser.write(chr(int(120)).encode())
+            #    print("new lowering code")
 
 
 
