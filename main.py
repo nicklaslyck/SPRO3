@@ -15,8 +15,6 @@ ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = False
 lowPower = 0
 lookingForSign = 0
-state = 0
-packageSymbol = ""
 print("starting python")
 print("sleeping for 2 sec...")
 
@@ -114,6 +112,8 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 while True: 
     image = vs.read()
     image = imutils.resize(image, width=w)
+
+    packageSymbol = "triangle"
     # Image parameters / set-up for selecting colors and finding lines
     if not stateDelivering:
         if lookingForSign and packageSymbol == "":
@@ -179,7 +179,7 @@ while True:
                     break # Stops program if button "q" is pressed.
                 time.sleep(.200)
             #analyse colors here..
-            print("shape info:")
+            print("detected following shapes:")
             print(compare)
             print(squares)
             print(triangles)
@@ -198,17 +198,19 @@ while True:
                 print("didn't find sign, checking again...")
 
         elif lookingForSign and not packageSymbol == "":
+            print("raising lift")
+            time.sleep(1)
             ser.write(chr(int(2)).encode()) # sends "no sign" assuming we are at package delivery point
             time.sleep(0.1)
             ser.write(chr(int(4)).encode()) # sends "4" to raise lift
             time.sleep(0.1)
             stateDelivering = True
-            while True:
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
-                    break # Stops program if button "q" is pressed.
-                print("stuckbitch")
-                print(packageSymbol)
+            #while True:
+            #    if cv2.waitKey(1) & 0xFF == ord('q'):
+            #        ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
+            #        break # Stops program if button "q" is pressed.
+            #    print("send 4")
+            #    print(packageSymbol)
         elif not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
             #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
