@@ -275,11 +275,10 @@ static void handleBattery(void)
 	if (voltage < MINVOLTAGE)
 	{
 		motor_stop();
-    
-                PORTC &= ~(1 << PORTC2);
-                _delay_ms(10);
-                PORTC |= (1 << PORTC2);
-                rasPi_send(UNDERVOLTAGE);
+        PORTC &= ~(1 << PORTC2);
+        _delay_ms(10);
+        PORTC |= (1 << PORTC2);
+        rasPi_send(UNDERVOLTAGE);
 		while (rasPiState == false)
 		{
 			if (rasPi_recieve() == MESSAGEOK)
@@ -320,6 +319,7 @@ static void met_actions(void)
   //&& cleared)
   {
     motor_stop();
+	PCMSK1 &= ~(1 << PCINT11);
     PORTC &= ~(1 << PORTC2);
     _delay_ms(10);
     PORTC |= (1 << PORTC2);
@@ -370,6 +370,7 @@ static void met_actions(void)
     //lift_control(UP);
     //cleared = FALSE;
     metAlarm = FALSE;
+	PCMSK1 |= (1 << PCINT11);
   }
 }
 
