@@ -316,11 +316,13 @@ static void met_actions(void)
 {
   static bool rasPiState = false;
   static unsigned char message = 0;
-  if (metAlarm == TRUE && cleared == TRUE)
+  if (metAlarm == TRUE)
+  //&& cleared == TRUE)
   //&& cleared)
   
   {
     motor_stop();
+	PCMSK1 &= ~(1 << PCINT11);
     PORTC &= ~(1 << PORTC2);
     _delay_ms(10);
     PORTC |= (1 << PORTC2);
@@ -337,6 +339,10 @@ static void met_actions(void)
       else if (message == TAKE) //Actions to do when no sign is present
       {
         lift_control(UP);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
         rasPiState = true;
 	  }
       else if (message == DROP)
@@ -354,6 +360,7 @@ static void met_actions(void)
     //lift_control(UP);
     //cleared = FALSE;
     metAlarm = FALSE;
+	PCMSK1 |= (1 << PCINT11);
   }
 }
 
