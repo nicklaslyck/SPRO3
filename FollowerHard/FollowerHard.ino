@@ -322,50 +322,27 @@ static void met_actions(void)
   //&& cleared)
   
   {
-    motor_stop();
-	PCMSK1 &= ~(1 << PCINT11);
-    PORTC &= ~(1 << PORTC2);
-    _delay_ms(10);
-    PORTC |= (1 << PORTC2);
-    rasPi_send(OBALARM);
-    while (rasPiState == FALSE)
-    {
-      message = rasPi_recieve();
-      if ((message == 1) && (metCounter < 2)) //Actions to do when sign is present
-      {
-        metCounter++;
-        rasPiState = TRUE;
-        //motor_mode = SLOW;
-        //obIgnore = true;
-      }
-      else if ((message == 2) && (metCounter < 2)) //Actions to do when no sign is present
+    PCMSK1 &= ~(1 << PCINT11);
+	motor_stop();
+    if (metCounter == 0) //Actions to do when sign is present
       {
         lift_control(UP);
-		//M1F = 1 * motor_mode;
-		//M2F = 1 * motor_mode;
-		//_delay_ms(500);
-		//motor_stop();
         metCounter++;
-        rasPiState = TRUE;
+      }
+    else if (metCounter == 1) //Actions to do when no sign is present
+      {
+        metCounter++;
+		M1F = 1 * motor_mode;
+		M2B = 1 * motor_mode;
+		_delay_ms(800);
 	  }
-      else if (metCounter > 2)
+    else if (metCounter == 2)
       {
-        lift_control(DOWN);
-		//M1B = 1 * motor_mode;
-		//M2B = 1 * motor_mode;
-		//_delay_ms(2000);
+    	lift_control(DOWN);
         metCounter = 0;
-        rasPiState = TRUE;
       }
-      else
-      {
-            rasPiState = FALSE;
-      }
-    }
-    //handleBattery();
-    //ob_check();
-    //lift_control(UP);
-    //cleared = FALSE;
+    else { }
+  }
     metAlarm = FALSE;
 	PCMSK1 |= (1 << PCINT11);
   }
