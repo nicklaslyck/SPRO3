@@ -15,6 +15,7 @@ ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = False
 lowPower = 0
 lookingForSign = 0
+stateChecking = 0
 print("starting python")
 print("sleeping for 2 sec...")
 
