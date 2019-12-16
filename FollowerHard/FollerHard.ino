@@ -64,7 +64,7 @@ static uint8_t motor_mode = FAST;
 #define STOP 0
 //#define TAKE 4
 //#define DROP 3
-static uint8_t metCounter = 0;
+int metCounter = 0;
 
 typedef enum
 {
@@ -102,6 +102,8 @@ int main(void)
 {
 	arduino_init();
 	motor_stop();
+    lift_control(DOWN);
+    lift_control(UP);
     lift_control(DOWN);
 	_delay_ms(1500);
 	while (1) 
