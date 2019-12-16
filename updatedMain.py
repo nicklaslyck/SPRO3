@@ -73,6 +73,7 @@ GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(18, GPIO.OUT)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency.
 servoPWM.start(93.2)
+servoPWM.ChangeDutyCycle(93.2)
 
 time.sleep(2)
 
@@ -123,7 +124,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 #stateDelivering = False
-packageSymbol = ""
+packageSymbol = "triangle"
 
 while True
     print("stateDelivering: " + str(stateDelivering))
@@ -217,6 +218,7 @@ while True
                 stateChecking = 0
         if not packageSymbol == "":
             print("package already defined as: " + packageSymbol)
+            stateChecking = 
     elif lookingForSign == 1:
         green = 0
         red = 0
