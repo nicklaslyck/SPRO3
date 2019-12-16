@@ -339,9 +339,35 @@ static void met_actions(void)
     else if (metCounter == 2)
       {
     	lift_control(DOWN);
-        metCounter = 0;
+        metCounter++;
       }
-    else { }
+	else if (metCounter == 3)
+	{
+		_delay_ms(1000);
+		metCounter++;
+	}
+	else if (metCounter == 4) //Actions to do when sign is present
+      {
+        lift_control(UP);
+        metCounter++;
+      }
+    else if (metCounter == 5) //Actions to do when no sign is present
+      {
+        metCounter++;
+		M1B = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(800);
+	  }
+    else if (metCounter == 6)
+      {
+    	lift_control(DOWN);
+        metCounter++;
+      }
+    else 
+	{
+		metCounter = 0;
+		_delay_ms(60000);
+	}
 	PCMSK1 |= (1 << PCINT11);
 	metAlarm = FALSE;
   }
