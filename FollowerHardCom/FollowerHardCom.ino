@@ -76,6 +76,7 @@ typedef enum
 int main(void);
 
 static volatile dir metAlarm = FALSE;
+static volatile dir metRecieve = FALSE;
 static volatile dir cleared = TRUE;
 
 static void motor_stop(void);
@@ -95,6 +96,8 @@ static void pwm_setup(void);
 static void adc_setup(void);
 static void rasPi_setup(void);
 static void arduino_init(void);
+
+static void hard_forward(uint16_t totalTime);
 
 static void met_actions(void);
 
@@ -313,6 +316,13 @@ static void handleBattery(void)
 	}
 }
 
+static void hard_forward(uint16_t totalTime){
+	M1F = 1 * motor_mode;
+	M2F = 1 * motor_mode;
+	_delay_ms(totalTime);
+	motor_stop();
+}
+
 static void met_actions(void)
 {
   static unsigned char message = 0;
@@ -323,72 +333,48 @@ static void met_actions(void)
   {
     PCMSK1 &= ~(1 << PCINT11);
 	motor_stop();
-    if (metCounter == 0) //Actions to do when sign is present
+    if (metCounter == 0) //Under central
       {
         lift_control(UP);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
+		hard_forward(500);
         metCounter++;
       }
-    else if (metCounter == 1) //Actions to do when no sign is present
+    else if (metCounter == 1) //First desition point
       {
-        metCounter++;
-		PORTC &= ~(1 << PORTC2);
-    	_delay_ms(10);
-    	PORTC |= (1 << PORTC2);
     	rasPi_send(OBALARM);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
-		_delay_ms(1000);
+		while (metRecieve == FALSE);
+		hard_forward(500);
+		metCounter++;
 	  }
-    else if (metCounter == 2)
+    else if (metCounter == 2) //Under first storage
       {
     	lift_control(DOWN);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
+		hard_forward(500);
         metCounter++;
       }
-	else if (metCounter == 3)
+	else if (metCounter == 3) //Zero point plate
 	{
-		metCounter++;
-		PORTC &= ~(1 << PORTC2);
-    	_delay_ms(10);
-    	PORTC |= (1 << PORTC2);
     	rasPi_send(2);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
+		hard_forward(500);
+		metCounter++;
 	}
-	else if (metCounter == 4) //Actions to do when sign is present
+	else if (metCounter == 4) //Under central again
       {
         lift_control(UP);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
+		hard_forward(500);
         metCounter++;
       }
-    else if (metCounter == 5) //Actions to do when no sign is present
+    else if (metCounter == 5) //Second desition point
       {
-        metCounter++;
-		M1B = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(800);
+        rasPi_send(OBALARM);
+		while (metRecieve == FALSE);
+		hard_forward(500);
+		metCounter++;
 	  }
-    else if (metCounter == 6)
+    else if (metCounter == 6) //under second storage
       {
     	lift_control(DOWN);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
+		hard_forward(500);
         metCounter++;
       }
     else 
@@ -409,6 +395,9 @@ unsigned char rasPi_recieve(void)
 
 void rasPi_send(unsigned char data) 
 {
+	PORTC &= ~(1 << PORTC2);
+    _delay_ms(10);
+    PORTC |= (1 << PORTC2);
 	while (!(UCSR0A & (1 << UDRE0))); //wait for transmit buffer
 	UDR0 = data; //data to be sent
 }
@@ -473,8 +462,8 @@ static void interrupts_setup(void)
 	//TIMSK1 |= (1 << OCIE1A); //Set the ISR COMPA vect
   
         //-----------------Inductor Sensor---------------//
-        PCICR |= (1 << PCIE1);
-        PCMSK1 |= (1 << PCINT11);
+    PCICR |= (1 << PCIE1);
+    PCMSK1 |= (1 << PCINT11) | (1 << PCINT12);
         
 	//>-- Enable interrupts  
 	sei(); //Enable interrupts
@@ -520,10 +509,19 @@ ISR(PCINT1_vect)
   {
     metAlarm = TRUE;
   }
-  else
+  else if (PINC & (1 << PINC3))
   {
     //cleared = TRUE;
   }
+  if (!(PINC & (1 << PINC4)))
+  {
+	  metRecieve = TRUE;
+  }
+  else if (PINC & (1 << PINC4))
+  {
+	  metRecieve = FALSE;
+  }
+  
   met_actions();
 }
 
