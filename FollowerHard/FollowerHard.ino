@@ -342,9 +342,8 @@ static void met_actions(void)
         metCounter = 0;
       }
     else { }
-  }
-    metAlarm = FALSE;
 	PCMSK1 |= (1 << PCINT11);
+	metAlarm = FALSE;
   }
 }
 
