@@ -123,14 +123,14 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
 #stateDelivering = False
+packageSymbol = ""
+
 while True
     print("stateDelivering: " + str(stateDelivering))
     print("lookingForSign: " + str(lookingForSign))
     print("count: " + str(count))
     image = vs.read()
     image = imutils.resize(image, width=w)
-
-    packageSymbol = "triangle"
     # Image parameters / set-up for selecting colors and finding liness
     if stateChecking == 1:
         if packageSymbol == "":
@@ -208,10 +208,15 @@ while True
                 if triangles < squares:
                     packageSymbol = "rectangle"
                     print("detected rectangle!")
-                stateChecking = 0
+                #stateChecking = 0
                 # MOVE CAMERA DOWN
             else:
-                print("didn't find sign, checking again...")
+                print("didn't find sign, checking again...")1
+
+            if not packageSymbol == "":
+                stateChecking = 0
+        if not packageSymbol == "":
+            print("package already defined as: " + packageSymbol)
     elif lookingForSign == 1:
         green = 0
         red = 0
@@ -286,12 +291,14 @@ while True
                 ser.write(chr(int(126)).encode()) 
                 lookingForSign = 0
                 time.sleep(0.6)
+                packageSymbol = ""
             elif (compare / (red+1)) < 5:
                 print("turn left...")
                 ser.write(chr(int(1)).encode())
                 ser.write(chr(int(2)).encode())
                 lookingForSign = 0
                 time.sleep(0.6)
+                packageSymbol = ""
             else:
                 print("bad shapes...")
         else:
