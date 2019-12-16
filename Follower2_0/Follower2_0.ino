@@ -345,7 +345,7 @@ static void met_actions(void)
 		//motor_stop();
         rasPiState = TRUE;
 	  }
-      else if (message == 55)
+      else if (message == 3)
       {
         lift_control(DOWN);
 		//M1B = 1 * motor_mode;
