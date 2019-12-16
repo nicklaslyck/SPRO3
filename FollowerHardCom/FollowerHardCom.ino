@@ -20,7 +20,7 @@
 #define M2B OCR0B // PD5
 #define M1F OCR0A // PD6
 #define M1B OCR2A // PB3
-#define FAST 126
+#define FAST 150
 #define SLOW 127
 
 typedef enum{
@@ -64,6 +64,7 @@ static uint8_t motor_mode = FAST;
 #define STOP 0
 //#define TAKE 4
 //#define DROP 3
+int metCounter = 0;
 
 typedef enum
 {
@@ -202,7 +203,7 @@ static void motor_control(void)
 		M2B = 1 * motor_mode;
 	}
 	
-
+/*
 	//Instructions for arduino
 	if (instruction == LIFTUP && motor_mode == SLOW) //@TODO 128 on SLOW operation means storage
 	{
@@ -218,7 +219,7 @@ static void motor_control(void)
 	{
 		motor_mode = SLOW;
 	}
-
+*/
 	//@TODO set ecuations and movement pattern
 }
 
@@ -231,7 +232,7 @@ static void lift_control(way direction)
 		{
 			PORTB |= (1 << PORTB4);
 			PORTB &= ~(1 << PORTB5);
-			handleBattery();
+			//handleBattery();
 		}
 	}
 	else if (direction == DOWN)
@@ -240,7 +241,7 @@ static void lift_control(way direction)
 		{
 			PORTB &= ~(1 << PORTB4);
 			PORTB |= (1 << PORTB5);
-			handleBattery();
+			//handleBattery();
 		}
 	}
 	PORTB &= ~(1 << PORTB4);
@@ -314,56 +315,64 @@ static void handleBattery(void)
 
 static void met_actions(void)
 {
-  static dir rasPiState = FALSE;
   static unsigned char message = 0;
   if (metAlarm == TRUE)
   //&& cleared == TRUE)
   //&& cleared)
   
   {
-    motor_stop();
-	PCMSK1 &= ~(1 << PCINT11);
-    PORTC &= ~(1 << PORTC2);
-    _delay_ms(10);
-    PORTC |= (1 << PORTC2);
-    rasPi_send(OBALARM);
-    while (rasPiState == FALSE)
-    {
-      message = rasPi_recieve();
-      if (message == 1) //Actions to do when sign is present
-      {
-        rasPiState = TRUE;
-        //motor_mode = SLOW;
-        //obIgnore = true;
-      }
-      else if (message == 2) //Actions to do when no sign is present
+    PCMSK1 &= ~(1 << PCINT11);
+	motor_stop();
+    if (metCounter == 0) //Actions to do when sign is present
       {
         lift_control(UP);
-		//M1F = 1 * motor_mode;
-		//M2F = 1 * motor_mode;
-		//_delay_ms(500);
-		//motor_stop();
-        rasPiState = TRUE;
+        metCounter++;
+      }
+    else if (metCounter == 1) //Actions to do when no sign is present
+      {
+        metCounter++;
+		PORTC &= ~(1 << PORTC2);
+    	_delay_ms(10);
+    	PORTC |= (1 << PORTC2);
+    	rasPi_send(OBALARM);
 	  }
-      else if (message == 3)
+    else if (metCounter == 2)
       {
-        lift_control(DOWN);
-		//M1B = 1 * motor_mode;
-		//M2B = 1 * motor_mode;
-		//_delay_ms(2000);
-        rasPiState = TRUE;
+    	lift_control(DOWN);
+        metCounter++;
       }
-      else
+	else if (metCounter == 3)
+	{
+		metCounter++;
+		PORTC &= ~(1 << PORTC2);
+    	_delay_ms(10);
+    	PORTC |= (1 << PORTC2);
+    	rasPi_send(2);
+	}
+	else if (metCounter == 4) //Actions to do when sign is present
       {
-            rasPiState = FALSE;
+        lift_control(UP);
+        metCounter++;
       }
-    }
-    //handleBattery();
-    //ob_check();
-    //lift_control(UP);
-    //cleared = FALSE;
-    metAlarm = FALSE;
+    else if (metCounter == 5) //Actions to do when no sign is present
+      {
+        metCounter++;
+		M1B = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(800);
+	  }
+    else if (metCounter == 6)
+      {
+    	lift_control(DOWN);
+        metCounter++;
+      }
+    else 
+	{
+		metCounter = 0;
+		_delay_ms(60000);
+	}
 	PCMSK1 |= (1 << PCINT11);
+	metAlarm = FALSE;
   }
 }
 
