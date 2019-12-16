@@ -232,7 +232,7 @@ static void lift_control(way direction)
 		{
 			PORTB |= (1 << PORTB4);
 			PORTB &= ~(1 << PORTB5);
-			handleBattery();
+			//handleBattery();
 		}
 	}
 	else if (direction == DOWN)
@@ -241,7 +241,7 @@ static void lift_control(way direction)
 		{
 			PORTB &= ~(1 << PORTB4);
 			PORTB |= (1 << PORTB5);
-			handleBattery();
+			//handleBattery();
 		}
 	}
 	PORTB &= ~(1 << PORTB4);
@@ -348,7 +348,7 @@ static void met_actions(void)
         metCounter++;
         rasPiState = TRUE;
 	  }
-      else if (metCounter == 2)
+      else if (metCounter > 2)
       {
         lift_control(DOWN);
 		//M1B = 1 * motor_mode;
