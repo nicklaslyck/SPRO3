@@ -218,7 +218,7 @@ while True:
                 stateChecking = 0
         if not packageSymbol == "":
             print("package already defined as: " + packageSymbol)
-            stateChecking = 
+            stateChecking = 0
     elif lookingForSign == 1:
         green = 0
         red = 0
