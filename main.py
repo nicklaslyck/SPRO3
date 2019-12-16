@@ -346,7 +346,7 @@ while True:
             #    else:
             #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             #else:
-            if not lookingForSign
+            if not lookingForSign:
                 sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             
             old_tempX = tempX
