@@ -93,15 +93,9 @@ def cleanUp():
 def arduinoCallback1(channel):
     global lookingForSign
     global lowPower
-<<<<<<< HEAD
-<<<<<<< HEAD
     global stateDelivering
     global count
     ser.reset_output_buffer()
-=======
->>>>>>> c4e6eefeddc985212f0e629d6cac871865968251
-=======
->>>>>>> c4e6eefeddc985212f0e629d6cac871865968251
     print("interrupt triggered...")
     read = ser.read()
     time.sleep(1)
