@@ -285,7 +285,6 @@ while True:
                 packageSymbol = ""
             elif (compare / (red+1)) < 5:
                 print("turn left...")
-                ser.write(chr(int(1)).encode())
                 ser.write(chr(int(2)).encode())
                 lookingForSign = 0
                 time.sleep(0.6)
@@ -340,7 +339,9 @@ while True:
             #print("can't find line.")
             if (highLineY > 10):
                 highLineY = highLineY - 5
-        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+
+        if not stateChecking and not lookingForSign:        
+            sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
         
         old_tempX = tempX
 
