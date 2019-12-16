@@ -103,12 +103,10 @@ int main(void)
 	arduino_init();
 	motor_stop();
     lift_control(DOWN);
-    lift_control(UP);
-    lift_control(DOWN);
 	_delay_ms(1500);
 	while (1) 
 	{	
-          handleBattery();
+          //handleBattery();
           motor_control();
         }
 }
@@ -205,7 +203,7 @@ static void motor_control(void)
 		M2B = 1 * motor_mode;
 	}
 	
-
+/*
 	//Instructions for arduino
 	if (instruction == LIFTUP && motor_mode == SLOW) //@TODO 128 on SLOW operation means storage
 	{
@@ -221,7 +219,7 @@ static void motor_control(void)
 	{
 		motor_mode = SLOW;
 	}
-
+*/
 	//@TODO set ecuations and movement pattern
 }
 
