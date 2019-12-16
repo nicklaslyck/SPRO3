@@ -15,7 +15,6 @@ ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = False
 lowPower = 0
 lookingForSign = 0
-count = 0
 print("starting python")
 print("sleeping for 2 sec...")
 
@@ -94,8 +93,12 @@ def cleanUp():
 def arduinoCallback1(channel):
     global lookingForSign
     global lowPower
+<<<<<<< HEAD
     global stateDelivering
     global count
+    ser.reset_output_buffer()
+=======
+>>>>>>> c4e6eefeddc985212f0e629d6cac871865968251
     print("interrupt triggered...")
     read = ser.read()
     time.sleep(1)
@@ -103,18 +106,6 @@ def arduinoCallback1(channel):
         lookingForSign = 1
         print("metal detected.")
         #ser.write(chr(int(3)).encode())####################################################################################################################################
-
-        if count == 1 and stateDelivering:
-            print("sending 55 from interrupt and stucking in while loop")
-            ser.write(chr(int(55)).encode())
-            while True:
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
-                    break # Stops program if button "q" is pressed.
-        else:
-            print("conditions not met yet.")
-                    
-
     elif read == b'\x02':                              # 13.8v battery
         print("powering off")
         sp.Popen("sudo poweroff")
@@ -126,11 +117,12 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
+count = 0
 #stateDelivering = False
-while True: 
-    #print("stateDelivering: " + str(stateDelivering))
-    #print("lookingForSign: " + str(lookingForSign))
-    #print("count: " + str(count))
+while True:
+    print("stateDelivering: " + str(stateDelivering))
+    print("lookingForSign: " + str(lookingForSign))
+    print("count: " + str(count))
     image = vs.read()
     image = imutils.resize(image, width=w)
 
@@ -269,6 +261,16 @@ while True:
                 if (highLineY > 10):
                     highLineY = highLineY - 5
                 #slope = 9000
+
+            #if (tempX > 40 and tempX < 60):
+            #   if (slope > -0.7 and slope < 0):
+
+            #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
+            #    elif (slope < 0.7 and slope > 0):
+            #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
+            #    else:
+            #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+            #else:
             sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             
             old_tempX = tempX
@@ -286,11 +288,11 @@ while True:
             time.sleep(1)
             ser.write(chr(int(2)).encode()) # raises lift
             time.sleep(10)
-            time.sleep(5)
+            time.sleep(10)
             stateDelivering = True
             lookingForSign = 0
 
-    elif stateDelivering:
+    if stateDelivering:
         if not lookingForSign:
             #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
             #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
@@ -341,6 +343,14 @@ while True:
                     highLineY = highLineY - 5
                 #slope = 9000
 
+            #if (tempX > 40 and tempX < 60):
+            #   if (slope > -0.7 and slope < 0):
+            #        sendLineInfo(newX = 100, oldX = old_tempX, width = w)
+            #    elif (slope < 0.7 and slope > 0):
+            #        sendLineInfo(newX = 27, oldX = old_tempX, width = w)
+            #    else:
+            #        sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
+            #else:
             if not lookingForSign:
                 sendLineInfo(newX = tempX, oldX = old_tempX, width = w)
             
@@ -356,14 +366,13 @@ while True:
             #ser.write(chr(int(0)).encode())
             time.sleep(1)
             if count == 1:
-                ser.write(chr(int(55)).encode())
-                print("recieved:")
-                print(ser.read())
+                ser.write(chr(int(3)).encode())
+                time.sleep(3)
                 print("lowering lift and sleeping for 12s")
-                time.sleep(12)
-                count = 0
+                #time.sleep(12)
+                #count = 0
                 lookingForSign = 0
-                #stateDelivering = False
+                stateDelivering = False
 
             elif count == 0:
                 ser.write(chr(int(1)).encode())
