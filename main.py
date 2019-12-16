@@ -285,7 +285,7 @@ while True:
             time.sleep(1)
             ser.write(chr(int(2)).encode()) # raises lift
             time.sleep(10)
-            time.sleep(10)
+            time.sleep(5)
             stateDelivering = True
             lookingForSign = 0
 
