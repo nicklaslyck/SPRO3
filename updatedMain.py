@@ -111,15 +111,6 @@ def arduinoCallback1(channel):
         stateChecking = 1
         lookingForSign = 0
 
-                                 # 13.8v battery
-    
-
-    #    print("powering off")
-    #    sp.Popen("sudo poweroff")
-    #elif read == b'\x03':                              # 14v battery
-    #    print("setting low-power mode enabled")
-    #    lowPower = 1
-
 GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=2000)
 
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
@@ -128,9 +119,6 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 packageSymbol = "triangle"
 
 while True:
-    #print("stateDelivering: " + str(stateDelivering))
-    #print("lookingForSign: " + str(lookingForSign))
-    #print("count: " + str(count))
     image = vs.read()
     image = imutils.resize(image, width=w)
     # Image parameters / set-up for selecting colors and finding liness
@@ -275,8 +263,8 @@ while True:
                         #cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
                         #    0.5, (0, 0, 0), 2)
                         
-                except Exception as e:
-                    print(e)
+                except:
+                    pass
 
                 cv2.imshow("thresh",thresh)
                 #cv2.imshow("Image1", image).
