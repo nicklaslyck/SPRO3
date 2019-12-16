@@ -335,6 +335,7 @@ static void met_actions(void)
     	_delay_ms(10);
     	PORTC |= (1 << PORTC2);
     	rasPi_send(OBALARM);
+		_delay_ms(200);
 	  }
     else if (metCounter == 2)
       {
