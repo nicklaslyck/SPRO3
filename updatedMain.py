@@ -127,9 +127,9 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 packageSymbol = "triangle"
 
 while True:
-    print("stateDelivering: " + str(stateDelivering))
-    print("lookingForSign: " + str(lookingForSign))
-    print("count: " + str(count))
+    #print("stateDelivering: " + str(stateDelivering))
+    #print("lookingForSign: " + str(lookingForSign))
+    #print("count: " + str(count))
     image = vs.read()
     image = imutils.resize(image, width=w)
     # Image parameters / set-up for selecting colors and finding liness
