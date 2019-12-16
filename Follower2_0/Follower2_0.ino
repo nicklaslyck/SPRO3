@@ -339,10 +339,10 @@ static void met_actions(void)
       else if (message == 2) //Actions to do when no sign is present
       {
         lift_control(UP);
-		M1F = 1 * motor_mode;
-		M2F = 1 * motor_mode;
-		_delay_ms(500);
-		motor_stop();
+		//M1F = 1 * motor_mode;
+		//M2F = 1 * motor_mode;
+		//_delay_ms(500);
+		//motor_stop();
         rasPiState = TRUE;
 	  }
       else if (message == 3)
