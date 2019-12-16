@@ -93,6 +93,9 @@ def cleanUp():
 def arduinoCallback1(channel):
     global lookingForSign
     global lowPower
+    global stateDelivering
+    global count
+    ser.reset_output_buffer()
     print("interrupt triggered...")
     read = ser.read()
     time.sleep(1)
@@ -282,7 +285,7 @@ while True:
             time.sleep(1)
             ser.write(chr(int(2)).encode()) # raises lift
             time.sleep(10)
-            time.sleep(10)
+            time.sleep(5)
             stateDelivering = True
             lookingForSign = 0
 
