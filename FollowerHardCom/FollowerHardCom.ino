@@ -326,6 +326,10 @@ static void met_actions(void)
     if (metCounter == 0) //Actions to do when sign is present
       {
         lift_control(UP);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
         metCounter++;
       }
     else if (metCounter == 1) //Actions to do when no sign is present
@@ -335,11 +339,19 @@ static void met_actions(void)
     	_delay_ms(10);
     	PORTC |= (1 << PORTC2);
     	rasPi_send(OBALARM);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
 		_delay_ms(1000);
 	  }
     else if (metCounter == 2)
       {
     	lift_control(DOWN);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
         metCounter++;
       }
 	else if (metCounter == 3)
@@ -349,10 +361,18 @@ static void met_actions(void)
     	_delay_ms(10);
     	PORTC |= (1 << PORTC2);
     	rasPi_send(2);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
 	}
 	else if (metCounter == 4) //Actions to do when sign is present
       {
         lift_control(UP);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
         metCounter++;
       }
     else if (metCounter == 5) //Actions to do when no sign is present
@@ -365,6 +385,10 @@ static void met_actions(void)
     else if (metCounter == 6)
       {
     	lift_control(DOWN);
+		M1F = 1 * motor_mode;
+		M2F = 1 * motor_mode;
+		_delay_ms(500);
+		motor_stop();
         metCounter++;
       }
     else 
