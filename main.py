@@ -114,7 +114,6 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 count = 0
 #stateDelivering = False
 while True:
-    global count
     print("stateDelivering: " + str(stateDelivering))
     print("lookingForSign: " + str(lookingForSign))
     print("count: " + str(count))
@@ -365,7 +364,7 @@ while True:
                 time.sleep(3)
                 print("lowering lift and sleeping for 12s")
                 #time.sleep(12)
-                count = 0
+                #count = 0
                 lookingForSign = 0
                 stateDelivering = False
 
