@@ -113,7 +113,8 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 # While loop for main logic
 count = 0
 #stateDelivering = False
-while True: 
+while True:
+    global count
     print("stateDelivering: " + str(stateDelivering))
     print("lookingForSign: " + str(lookingForSign))
     print("count: " + str(count))
