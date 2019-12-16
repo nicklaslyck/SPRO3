@@ -126,7 +126,7 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 #stateDelivering = False
 packageSymbol = "triangle"
 
-while True
+while True:
     print("stateDelivering: " + str(stateDelivering))
     print("lookingForSign: " + str(lookingForSign))
     print("count: " + str(count))
