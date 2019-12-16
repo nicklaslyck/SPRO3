@@ -212,7 +212,7 @@ while True:
                 #stateChecking = 0
                 # MOVE CAMERA DOWN
             else:
-                print("didn't find sign, checking again...")1
+                print("didn't find sign, checking again...")
 
             if not packageSymbol == "":
                 stateChecking = 0
