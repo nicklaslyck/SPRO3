@@ -22,29 +22,40 @@ w = 200
 vs = WebcamVideoStream(src=0).start()
  
 # Defines lower color values for color filters
-lr_b = 0 #0
-lg_b = 130 #40
-lb_b = 160 #190
+lr_b = 0
+lg_b = 120
+lb_b = 190
 
-hr_b = 130 # 66
-hg_b = 255 # 126
-hb_b = 255 # 255
+hr_b = 50
+hg_b = 230
+hb_b = 255
 
-lr_r = 200 #235
-lg_r = 0 #25
-lb_r = 0 #50
 
-hr_r = 255 #255
-hg_r = 100 #50
-hb_r = 145 #100
+############## OLD VALUES USED
+#lr_b = 0
+#lg_b = 130
+#lb_b = 160
 
-lr_g = 0 #235
-lg_g = 125 #25
-lb_g = 0 #5
+#hr_b = 130
+#hg_b = 255
+#hb_b = 255
 
-hr_g = 130 #255
-hg_g = 255 #50
-hb_g = 165 #100
+
+lr_r = 200
+lg_r = 0
+lb_r = 0
+
+hr_r = 255 
+hg_r = 100 
+hb_r = 145
+
+lr_g = 0
+lg_g = 125
+lb_g = 0
+
+hr_g = 130
+hg_g = 255
+hb_g = 165
 
 # Defines numpy array with color filter values
 lower_color_blue = np.array([lb_b, lg_b, lr_b], dtype=np.uint8)
@@ -380,10 +391,6 @@ while True:
                 print("turning left")
                 count = 1
                 lookingForSign = 0
-                #ser.write(chr(int(120)).encode())
-                print("new lowering code")
-
-
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         ser.write(chr(int(0)).encode()) # sending 0 over serial to stop movement.
