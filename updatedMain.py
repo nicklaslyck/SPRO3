@@ -11,6 +11,7 @@ import time
 import imutils
 import RPi.GPIO as GPIO
 
+#sets up variables:
 ser = serial.Serial('/dev/ttyACM0', 9600)
 stateDelivering = False
 lowPower = 0
@@ -19,33 +20,45 @@ stateChecking = 0
 print("starting python")
 print("sleeping for 2 sec...")
 
+#sets up threaded image loading and custom picture width "w"
 w = 200
 vs = WebcamVideoStream(src=0).start()
  
-# Defines lower color values for color filters
-lr_b = 0 #0
-lg_b = 130 #40
-lb_b = 160 #190
+# Defines color filters for different color ranes
+lr_b = 0
+lg_b = 120
+lb_b = 190
 
-hr_b = 130 # 66
-hg_b = 255 # 126
-hb_b = 255 # 255
+hr_b = 50
+hg_b = 230
+hb_b = 255
 
-lr_r = 200 #235
-lg_r = 0 #25
-lb_r = 0 #50
 
-hr_r = 255 #255
-hg_r = 100 #50
-hb_r = 145 #100
+############## OLD VALUES USED
+#lr_b = 0
+#lg_b = 130
+#lb_b = 160
 
-lr_g = 0 #235
-lg_g = 125 #25
-lb_g = 0 #5
+#hr_b = 130
+#hg_b = 255
+#hb_b = 255
 
-hr_g = 130 #255
-hg_g = 255 #50
-hb_g = 165 #100
+
+lr_r = 200
+lg_r = 0
+lb_r = 0
+
+hr_r = 255 
+hg_r = 100 
+hb_r = 145
+
+lr_g = 0
+lg_g = 125
+lb_g = 0
+
+hr_g = 130
+hg_g = 255
+hb_g = 165
 
 # Defines numpy array with color filter values
 lower_color_blue = np.array([lb_b, lg_b, lr_b], dtype=np.uint8)
@@ -55,6 +68,7 @@ upper_color_green = np.array([hb_g, hg_g, hr_g], dtype=np.uint8)
 lower_color_red = np.array([lb_r, lg_r, lr_r], dtype=np.uint8)
 upper_color_red = np.array([hb_r, hg_r, hr_r], dtype=np.uint8)
 
+#image filtering parameter
 max_slider = 40
 
 # current robot line coordinates is defined with null values.
@@ -67,11 +81,15 @@ hy2 = 0
 highLineY = 0
 tempX = 320
 old_tempX = 320
+
+# Sets up GPIO (hardware pins on raspberrypi)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 GPIO.setup(18, GPIO.OUT)
+GPIO.setup(27,GPIO.OUT)
+GPIO.outout(27,0)
 servoPWM = GPIO.PWM(18, 50) # channel 0, 50hz PWM frequency.
 servoPWM.start(93.2)
 servoPWM.ChangeDutyCycle(93.2)
@@ -115,10 +133,10 @@ GPIO.add_event_detect(17, GPIO.FALLING, callback=arduinoCallback1, bouncetime=20
 
  #0: following line, 1: looking for sign, 2: picking up package, 3: delivering package.
 # While loop for main logic
-#stateDelivering = False
-packageSymbol = "triangle"
+
 
 while True:
+    packageSymbol = "triangle" # to predefine packagename, enter something other than ""
     image = vs.read()
     image = imutils.resize(image, width=w)
     # Image parameters / set-up for selecting colors and finding liness
@@ -205,9 +223,21 @@ while True:
 
             if not packageSymbol == "":
                 stateChecking = 0
+                GPIO.outout(27,1)
+                ser.write(chr(int(63)))
+                time.sleep(0.5)
+                GPIO.outout(27,0)
+                ser.write(chr(int(0)))
         if not packageSymbol == "":
             print("package already defined as: " + packageSymbol)
             stateChecking = 0
+            GPIO.outout(27,1)
+            ser.write(chr(int(63)))
+            time.sleep(0.5)
+            GPIO.outout(27,0)
+            ser.write(chr(int(0)))
+
+
     elif lookingForSign == 1:
         green = 0
         red = 0
@@ -279,15 +309,19 @@ while True:
         if compare > 30 and compare < 55:
             if (compare / (green+1)) < 5:
                 print("turning right...")
+                GPIO.outout(27,1)
                 ser.write(chr(int(126)).encode()) 
                 lookingForSign = 0
                 time.sleep(0.6)
+                GPIO.outout(27,0)
                 packageSymbol = ""
             elif (compare / (red+1)) < 5:
                 print("turn left...")
+                GPIO.outout(27,1)
                 ser.write(chr(int(2)).encode())
                 lookingForSign = 0
                 time.sleep(0.6)
+                GPIO.outout(27,0)
                 packageSymbol = ""
             else:
                 print("bad shapes...")
@@ -295,12 +329,8 @@ while True:
             print("too many or not enough!")
 
     elif lookingForSign == 0 and stateChecking == 0:
-        #mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
-        #edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
         
         mask = cv2.inRange(image, lower_color_blue, upper_color_blue) # find colors between the color limits defined earlier. This image is black and white.
-        #blurred1 = cv2.GaussianBlur(mask, (6, 6), 0)
-        #thresh1 = cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1] #60, 255 default
 
         edges = cv2.Canny(mask,50,100) # Find edges from the previously defined mask.
         lines = cv2.HoughLinesP(edges, 1, np.pi/180, max_slider, minLineLength=60, maxLineGap=100) # This command finds lines from the edges found previously. Lines becomes an array of line start/end coordinates
